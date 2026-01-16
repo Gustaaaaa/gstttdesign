@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSTDESIGN - Web Design Streetwear</title>
+    <!-- Favicon -->
+    <link rel="icon" href="https://i.imgur.com/y9DwJcA.png" type="image/png">
+    
+    <!-- Font Awesome (Para o ícone da Shopify) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- ScrollReveal.js -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <!-- Vanilla Tilt (Efeito 3D) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter e Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Ícones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        background: '#050505',
+                        surface: '#121212',
+                        primary: '#ffffff',
+                        accent: '#2563EB', // Azul vibrante (Royal Blue)
+                        shopify: '#95BF47', // Verde Shopify
+                        nuvemshop: '#2D3276', // Azul Nuvemshop
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #ffffff05 1px, transparent 1px), linear-gradient(to bottom, #ffffff05 1px, transparent 1px)",
+                    },
+                    animation: {
+                        'subtle-pulse': 'subtlePulse 3s infinite',
+                        'slide-words': 'slideWords 8s cubic-bezier(0.23, 1, 0.32, 1) infinite',
+                        'holographic': 'holographicFloat 6s ease-in-out infinite',
+                        'loading-bar': 'loadingBar 1.5s ease-in-out infinite',
+                        'bounce-slow': 'bounceSlow 3s infinite',
+                    },
+                    keyframes: {
+                        subtlePulse: {
+                            '0%, 100%': { boxShadow: '0 0 0 0 rgba(255, 255, 255, 0)' },
+                            '50%': { boxShadow: '0 0 15px 0 rgba(255, 255, 255, 0.15)' },
+                        },
+                        slideWords: {
+                            '0%, 20%': { transform: 'translateY(0%)' },      /* Marca */
+                            '25%, 45%': { transform: 'translateY(-25%)' },  /* Loja */
+                            '50%, 70%': { transform: 'translateY(-50%)' },  /* Visão */
+                            '75%, 95%': { transform: 'translateY(-75%)' },  /* Hype */
+                            '100%': { transform: 'translateY(-100%)' }      /* Marca (Clone) -> Reset imediato no fim seria ideal, mas translateY(-75%) é o ultimo passo visivel antes do loop, ajustado para 4 itens + clone se fosse JS, aqui vamos simplificar com 4 itens no HTML e loop visual */
+                        },
+                        // CORREÇÃO: Animação holográfica SEM filtros de sombra/brilho
+                        holographicFloat: {
+                            '0%': { 
+                                transform: 'perspective(1000px) rotateY(-15deg) rotateX(5deg) scale(1)'
+                            },
+                            '50%': { 
+                                transform: 'perspective(1000px) rotateY(15deg) rotateX(-5deg) scale(1.05)'
+                            },
+                            '100%': { 
+                                transform: 'perspective(1000px) rotateY(-15deg) rotateX(5deg) scale(1)'
+                            }
+                        },
+                        loadingBar: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '50%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        },
+                        bounceSlow: {
+                            '0%, 100%': { transform: 'translateY(-5%)' },
+                            '50%': { transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .mobile-menu {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .mobile-menu.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        
+        /* FAQ Animation */
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] summary ~ * {
+            animation: sweep .3s ease-in-out;
+        }
+        @keyframes sweep {
+            0%    {opacity: 0; transform: translateY(-10px)}
+            100%  {opacity: 1; transform: translateY(0)}
+        }
+
+        /* Classe ativa para ScrollSpy */
+        .nav-link-active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        /* Ocultar elementos antes do reveal para evitar flash */
+        .sr-hidden {
+            visibility: hidden;
+        }
+
+        /* ESTILOS DO NOTEBOOK 3D */
+        .laptop-perspective {
+            perspective: 1500px; /* Profundidade 3D */
+        }
+        .laptop-lid {
+            transform-origin: bottom; /* Rotação a partir da base/dobradiça */
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: rotateX(-100deg); /* Estado inicial: Fechado */
+        }
+        .laptop-lid.is-open {
+            transform: rotateX(0deg); /* Estado final: Aberto */
+        }
+        .screen-reflection {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 40%);
+            pointer-events: none;
+        }
+        
+        /* Scroll invisível no Iframe */
+        .iframe-scroll-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .iframe-container-oversized {
+            width: calc(100% + 18px);
+            height: 100%;
+            overflow-y: scroll;
+            padding-right: 17px;
+            box-sizing: content-box; 
+        }
+
+        /* EFEITO 3D CARD (Configuração base para o JS interagir) */
+        .card-3d-hover {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+        /* O JS VanillaTilt cuida do transform, aqui definimos apenas borda e sombra adicionais */
+        .card-3d-hover:hover {
+            border-color: rgba(37, 99, 235, 0.5); /* Accent color */
+            box-shadow: 0 20px 50px -10px rgba(37, 99, 235, 0.15);
+        }
+        /* Estilo do Glare (reflexo) adicionado pelo JS */
+        .js-tilt-glare {
+            border-radius: 1rem;
+        }
+
+        /* ANIMAÇÃO DE TEXTO SLIDE (Manual para controle preciso do loop) */
+        @keyframes slideWordsAnim {
+            0%, 20% { transform: translateY(0%); }
+            25%, 45% { transform: translateY(-20%); } /* 5 itens total: 4 palavras + 1 clone */
+            50%, 70% { transform: translateY(-40%); }
+            75%, 95% { transform: translateY(-60%); }
+            100% { transform: translateY(-80%); } /* Move para o clone da primeira palavra */
+        }
+        .animate-word-slide {
+            animation: slideWordsAnim 8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+
+        /* PROTEÇÃO DE IMAGENS (MOBILE/DESKTOP) */
+        img {
+            -webkit-touch-callout: none; /* Impede menu de toque longo no iOS (Salvar Imagem) */
+            -webkit-user-select: none;   /* Impede seleção no Chrome/Safari */
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;     /* Impede arrastar imagem */
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            pointer-events: auto;        /* Garante que cliques ainda funcionem, mas bloqueia seleção/arraste */
+        }
+    </style>
+</head>
+<body class="bg-background text-white font-sans min-h-screen relative overflow-x-hidden selection:bg-accent selection:text-white">
+
+    <!-- NOISE TEXTURE OVERLAY (NOVO) -->
+    <!-- Adiciona textura granulada para estética Streetwear/Premium -->
+    <div class="fixed inset-0 z-[40] opacity-[0.04] pointer-events-none mix-blend-overlay" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%221%22/%3E%3C/svg%3E');"></div>
+
+    <!-- APPLE STYLE NOTIFICATION (Desktop Only) -->
+    <!-- Container alinhado com a navbar para posicionamento correto e com clique habilitado -->
+    <div class="fixed top-28 left-0 right-0 mx-auto w-[95%] md:w-[90%] max-w-6xl z-[60] pointer-events-none hidden md:flex justify-end">
+        <a href="#contact" id="apple-notification" class="pointer-events-auto cursor-pointer flex items-start gap-3 p-3 w-80 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl transform translate-x-[150%] opacity-0 transition-all duration-700 ease-in-out hover:bg-black/80">
+            <!-- App Icon (Apenas Logo, sem quadrado de fundo) -->
+            <div class="flex-shrink-0 w-10 h-10 overflow-hidden flex items-center justify-center">
+                <img src="https://i.imgur.com/y9DwJcA.png" alt="GST Logo" class="w-full h-full object-contain">
+            </div>
+            <!-- Content -->
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-0.5">
+                    <span class="text-[13px] font-semibold text-white tracking-wide">GSTDESIGN</span>
+                    <span class="text-[11px] text-gray-400">Há 1m</span>
+                </div>
+                <p class="text-[13px] text-white leading-snug">Olá! Vamos criar um site juntos? 🚀</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- Background Grid Effect -->
+    <div class="fixed inset-0 bg-grid-pattern bg-[size:40px_40px] pointer-events-none z-0"></div>
+    <div class="fixed inset-0 bg-gradient-to-t from-background via-transparent to-background pointer-events-none z-0"></div>
+
+    <!-- Navbar Container -->
+    <nav class="reveal-nav fixed top-6 left-0 right-0 mx-auto w-[95%] md:w-[90%] max-w-6xl z-50 rounded-xl border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-md shadow-2xl transition-all duration-300">
+        <div class="px-6">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo e Marca (Esquerda) -->
+                <a href="#home" class="flex-shrink-0 flex items-center gap-3 cursor-pointer group">
+                    <div class="relative w-10 h-10 flex items-center justify-center rounded-lg overflow-hidden transition-transform group-hover:scale-105">
+                        <img 
+                            src="https://i.imgur.com/y9DwJcA.png" 
+                            alt="Logo GST" 
+                            class="w-full h-full object-contain"
+                            onerror="this.onerror=null; this.src='https://placehold.co/100x100/121212/FFF?text=G';"
+                        >
+                    </div>
+                    <!-- Alteração: Adicionado 'hidden md:block' para ocultar em mobile -->
+                    <span class="hidden md:block font-display font-bold text-xl tracking-widest text-white group-hover:text-gray-200 transition-colors">
+                        GSTDESIGN
+                    </span>
+                </a>
+
+                <!-- Links de Navegação (Desktop - Centro) -->
+                <div class="hidden md:block">
+                    <div class="flex items-baseline space-x-1 lg:space-x-2 bg-white/5 rounded-xl px-2 py-2 border border-white/5">
+                        <a href="#home" class="nav-link text-white hover:bg-white/10 px-4 py-2 rounded-lg text-sm font-medium transition-colors" data-target="home">
+                            Home
+                        </a>
+                        <a href="#demo" class="nav-link text-gray-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all" data-target="demo">
+                            Demos
+                        </a>
+                        <a href="#testimonials" class="nav-link text-gray-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all" data-target="testimonials">
+                            Reviews
+                        </a>
+                        <a href="#agency" class="nav-link text-gray-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all" data-target="agency">
+                            Agência
+                        </a>
+                        <a href="#process" class="nav-link text-gray-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all" data-target="process">
+                            Processo
+                        </a>
+                        <a href="#contact" class="nav-link text-gray-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all" data-target="contact">
+                            Contato
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Botão de Ação (Desktop - Direita) -->
+                <div class="hidden md:flex items-center gap-4">
+                    <!-- Badge removido conforme solicitado -->
+
+                    <a href="#contact" class="group relative inline-flex items-center justify-center px-6 py-2.5 overflow-hidden font-medium text-black transition duration-300 ease-out border border-white rounded-lg shadow-lg hover:shadow-white/20 animate-subtle-pulse">
+                        <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </span>
+                        <span class="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform bg-white group-hover:translate-x-full ease">Orçar Site</span>
+                        <span class="relative invisible">Orçar Site</span>
+                    </a>
+                </div>
+
+                <!-- Botão Menu Mobile (Hambúrguer) -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="toggleMenu()" class="inline-flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white transition-all">
+                        <span class="sr-only">Abrir menu principal</span>
+                        <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+                        <i data-lucide="x" id="close-icon" class="w-6 h-6 hidden"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Mobile -->
+        <div class="mobile-menu md:hidden border-t border-white/5" id="mobile-menu">
+            <div class="px-4 pt-2 pb-4 space-y-1">
+                <a href="#home" onclick="toggleMenu()" class="text-white block px-3 py-2 rounded-lg text-base font-medium bg-white/10">Home</a>
+                <a href="#demo" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Demos</a>
+                <a href="#testimonials" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Reviews</a>
+                <a href="#agency" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Agência</a>
+                <a href="#process" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Processo</a>
+                <a href="#contact" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Contato</a>
+                <div class="pt-4">
+                    <a href="#contact" onclick="toggleMenu()" class="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-black bg-white hover:bg-gray-200 transition-colors animate-pulse">
+                        Orçar Agora
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10">
+        
+        <!-- SECTION: HERO -->
+        <section id="home" class="min-h-screen flex items-center justify-center pt-32 pb-20 w-[95%] md:w-[90%] max-w-6xl mx-auto scroll-mt-28">
+            <div class="text-center space-y-8">
+                
+                <!-- CONTAINER BADGES -->
+                <div class="reveal-hero-badges flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="https://www.shopify.com/br/avaliacao-gratuita?term=shopify&adid=624666449027&campaignid=15436645174&branded_enterprise=1&BOID=brand&utm_medium=cpc&utm_source=google&gad_source=1&gad_campaignid=15436645174&gbraid=0AAAAADiv1InFJIg3goKut-0uUFtNsg-FY&gclid=CjwKCAiAvaLLBhBFEiwAYCNTfzmOb_V_lqTRwJFJvyGkaPGLe0pyhW4KCZygAdFzGIu5BdGAjaCFABoCf30QAvD_BwE" target="_blank" class="inline-flex h-10 min-w-[190px] items-center justify-center px-4 rounded-lg border border-shopify/30 bg-shopify/10 text-xs font-bold text-white backdrop-blur-sm hover:bg-shopify/20 transition-colors decoration-0">
+                        <!-- Mudança aqui: text-white para o ícone -->
+                        <i class="fa-brands fa-shopify text-lg mr-2 text-white"></i>
+                        SHOPIFY EXPERTS
+                    </a>
+                    
+                    <a href="https://www.nuvemshop.com.br" target="_blank" class="inline-flex h-10 min-w-[190px] items-center justify-center px-4 rounded-lg border border-nuvemshop/50 bg-nuvemshop/30 text-xs font-bold text-white backdrop-blur-sm hover:bg-nuvemshop/50 transition-colors decoration-0">
+                        <img src="https://i.imgur.com/d5qlNN6.png" alt="Logo Nuvemshop" class="h-4 mr-2 object-contain filter brightness-0 invert">
+                        NUVEMSHOP EXPERTS
+                    </a>
+                </div>
+
+                <!-- TÍTULO HERO ANIMADO (Restaurado) -->
+                <h1 class="reveal-hero-title text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight text-white leading-[1.1]">
+                    Nosso site. <br>
+                    <!-- Altura aumentada para 1.3em para evitar corte de descenders (letra j, g, p) -->
+                    <div class="inline-block h-[1.3em] overflow-hidden align-bottom text-white relative top-1 md:top-3">
+                        <!-- Mudado de text-left para text-center e flex para centralizar -->
+                        <div class="block animate-word-slide text-center w-full">
+                            <!-- Altura fixa para cada item igual ao container pai -->
+                            <div class="h-[1.3em] flex items-center justify-center">Sua Marca.</div>
+                            <div class="h-[1.3em] flex items-center justify-center">Sua Loja.</div>
+                            <div class="h-[1.3em] flex items-center justify-center">Sua Visão.</div>
+                            <div class="h-[1.3em] flex items-center justify-center">Seu Hype.</div>
+                            <div class="h-[1.3em] flex items-center justify-center">Sua Marca.</div> <!-- Clone para loop perfeito -->
+                        </div>
+                    </div>
+                </h1>
+
+                <p class="reveal-hero-text text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                    Não fazemos apenas sites. Criamos vitrines digitais imersivas para marcas de roupa que respiram a cultura urbana.
+                </p>
+                <div class="reveal-hero-buttons flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <!-- Botão "Conhecer a GST" - Tamanho fixo w-[240px] e h-14 -->
+                    <a href="#history" class="group relative inline-flex items-center justify-center w-full sm:w-[240px] h-14 overflow-hidden font-bold text-black transition duration-300 ease-out border border-white rounded-lg shadow-lg hover:shadow-white/20 animate-subtle-pulse">
+                        <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
+                            Conhecer a GST
+                            <i data-lucide="arrow-down" class="ml-2 w-4 h-4"></i>
+                        </span>
+                        <span class="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform bg-white group-hover:translate-x-full ease">
+                            Conhecer a GST
+                            <i data-lucide="arrow-down" class="ml-2 w-4 h-4"></i>
+                        </span>
+                        <span class="relative invisible">
+                            Conhecer a GST
+                            <i data-lucide="arrow-down" class="ml-2 w-4 h-4"></i>
+                        </span>
+                    </a>
+                    
+                    <!-- Botão "Ver demos" - Tamanho fixo w-[240px] e h-14 -->
+                    <a href="#demo" class="inline-flex items-center justify-center w-full sm:w-[240px] h-14 bg-transparent border border-white/20 text-white font-medium rounded-lg hover:bg-white/5 transition-colors">
+                        Ver demos
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: BENEFÍCIOS -->
+        <section class="py-16 w-[95%] md:w-[90%] max-w-6xl mx-auto border-t border-white/5">
+            <div class="mb-12 text-center md:text-left reveal-benefits-title">
+                <h2 class="text-3xl md:text-4xl font-display font-bold leading-tight max-w-2xl">
+                    Com a nossa ajuda, <br>
+                    <span class="text-accent">se destacar será inevitável.</span>
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="card-3d-hover reveal-card p-8 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
+                        <i data-lucide="layout" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 font-display">Site completo</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Do visual às integrações, tudo pronto para vender da melhor forma. Entregamos a loja configurada.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="card-3d-hover reveal-card p-8 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
+                        <i data-lucide="palette" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 font-display">Design exclusivo</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Temas próprios, com design premium e autêntico para a sua marca. Fuja do padrão e crie identidade.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="card-3d-hover reveal-card p-8 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
+                        <i data-lucide="zap" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3 font-display">Serviço rápido</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Desenvolvemos de forma ágil, sem abrir mão da qualidade. Seu lançamento não pode esperar.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVA SEÇÃO: HISTÓRIA DA GST -->
+        <section id="history" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto border-t border-white/5 scroll-mt-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Texto da História -->
+                <div class="reveal-history-text order-2 md:order-1">
+                    <h2 class="text-sm font-bold text-accent uppercase tracking-widest mb-2">Nossa História</h2>
+                    <h3 class="text-3xl md:text-4xl font-display font-bold leading-tight mb-6">
+                        Do asfalto para o <br> <span class="text-white">ambiente digital.</span>
+                    </h3>
+                    <div class="space-y-4 text-gray-400 text-lg leading-relaxed">
+                        <p>
+                            Fundada em 2020, a <strong>GSTDESIGN</strong> surgiu da lacuna evidente entre a moda urbana autêntica e as experiências de e-commerce genéricas que existiam no mercado.
+                        </p>
+                        <p>
+                            Começamos criando identidades visuais para marcas locais e rapidamente evoluímos para um estúdio <em>full-service</em> focado no ecossistema Shopify.
+                        </p>
+                        <p>
+                            Nossa missão sempre foi clara: traduzir a cultura do <em>hype</em> em interfaces que não apenas impressionam visualmente, mas que aguentam o tráfego intenso de grandes lançamentos.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Imagem Mobile (NOVO - Só aparece em telas pequenas) -->
+                <div class="reveal-history-img order-1 md:hidden w-full flex justify-center mb-2">
+                    <div class="relative w-full aspect-square sm:aspect-video rounded-2xl overflow-hidden border border-white/10 shadow-2xl group">
+                        <img src="https://i.imgur.com/ydsTHIk.jpeg" alt="História GST Mobile" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                    </div>
+                </div>
+
+                <!-- Logo 3D Interativa (REVERTIDO PARA VERSÃO LIMPA - Só Desktop) -->
+                <!-- Alterado: classe hidden md:flex para ocultar no mobile conforme solicitado -->
+                <div class="reveal-history-img order-1 md:order-2 hidden md:flex justify-center">
+                    <!-- Container com perspectiva -->
+                    <div class="relative w-72 h-72 md:w-96 md:h-96 flex items-center justify-center" style="perspective: 1000px;">
+                        
+                        <!-- Logo GST (Interativa, mas sem glass/reflexo) -->
+                        <img src="https://i.imgur.com/y9DwJcA.png" 
+                             alt="GST 3D Logo" 
+                             class="logo-3d-interactive w-full h-full object-contain drop-shadow-2xl"
+                             style="transform-style: preserve-3d; will-change: transform;">
+                             
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVA SEÇÃO: SITES DEMO (NOTEBOOK) -->
+        <section id="demo" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto border-t border-white/5 scroll-mt-20 overflow-hidden">
+            <div class="text-center mb-16 reveal-demo-title">
+                <h2 class="text-3xl md:text-4xl font-display font-bold leading-tight">
+                    Veja nossos sites demo <br>
+                    <span class="text-accent">Design exclusivo e de alto padrão</span>
+                </h2>
+            </div>
+
+            <!-- Container do Notebook com Perspectiva -->
+            <div id="notebook-container" class="trigger-laptop laptop-perspective w-full max-w-4xl mx-auto h-[250px] sm:h-[350px] md:h-[500px] relative mt-10">
+                
+                <!-- Base do Notebook (Teclado) -->
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[110%] h-4 bg-[#1a1a1a] rounded-b-xl shadow-2xl z-20 border-t border-white/10"></div>
+                <!-- Detalhe do encaixe -->
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[15%] h-3 bg-[#222] rounded-t-sm z-20 mb-1"></div>
+
+                <!-- Tampa do Notebook (Tela) -->
+                <div id="laptop-lid" class="laptop-lid absolute bottom-4 left-0 right-0 mx-auto w-full h-full bg-[#0a0a0a] rounded-t-xl border-[8px] md:border-[12px] border-[#1a1a1a] shadow-2xl z-10 origin-bottom">
+                      
+                      <!-- Webcam -->
+                      <div class="absolute top-[-6px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-gray-600 rounded-full z-20"></div>
+                      
+                      <!-- Tela do Notebook (Dual View System) -->
+                      <div class="w-full h-full bg-[#080808] overflow-hidden relative rounded-t-sm">
+                          
+                          <!-- VIEW 1: GRID SELETOR (Default) -->
+                          <div id="notebook-grid" class="absolute inset-0 z-20 p-6 sm:p-8 flex flex-col h-full bg-[#080808] overflow-y-auto custom-scrollbar">
+                              <div class="flex items-center justify-between mb-6 shrink-0">
+                                  <h3 class="text-white font-display font-bold text-lg sm:text-xl">Nossos sites:</h3>
+                                  <div class="flex gap-2">
+                                       <div class="w-2 h-2 rounded-full bg-red-500/50"></div>
+                                       <div class="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                                       <div class="w-2 h-2 rounded-full bg-green-500/50"></div>
+                                  </div>
+                              </div>
+                              
+                              <div class="grid grid-cols-2 gap-4 sm:gap-6 pb-8 w-full">
+                                  <!-- Card 1: Goats Lab -->
+                                  <a href="https://goatslab.com.br/" target="_blank" class="cursor-pointer group relative aspect-[4/3] bg-zinc-900 rounded-xl overflow-hidden border border-white/10 hover:border-accent/50 transition-all shadow-lg hover:shadow-accent/20 block">
+                                      <!-- BG Image/Gradient -->
+                                      <div class="absolute inset-0 bg-gradient-to-br from-purple-900/40 to-blue-900/40 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+                                      <!-- Icon/Logo Placeholder (Google Favicon API) -->
+                                      <div class="absolute inset-0 flex items-center justify-center">
+                                          <img src="https://www.google.com/s2/favicons?domain=goatslab.com.br&sz=128" class="w-12 sm:w-16 h-12 sm:h-16 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform rounded-xl">
+                                      </div>
+                                      <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all"></div>
+                                      
+                                      <div class="absolute bottom-3 left-3">
+                                          <span class="block text-xs font-bold text-white tracking-wide truncate pr-2">Goats Lab</span>
+                                          <span class="text-[10px] text-gray-400">Streetwear Premium</span>
+                                      </div>
+                                      <div class="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
+                                          <div class="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
+                                              <i data-lucide="arrow-up-right" class="w-3 h-3 text-black"></i>
+                                          </div>
+                                      </div>
+                                  </a>
+
+                                  <!-- Card 2: Sufgang -->
+                                  <a href="https://sufgang.com.br/" target="_blank" class="cursor-pointer group relative aspect-[4/3] bg-zinc-900 rounded-xl overflow-hidden border border-white/10 hover:border-accent/50 transition-all shadow-lg hover:shadow-accent/20 block">
+                                      <div class="absolute inset-0 bg-gradient-to-br from-red-900/40 to-orange-900/40 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+                                      <div class="absolute inset-0 flex items-center justify-center">
+                                          <img src="https://www.google.com/s2/favicons?domain=sufgang.com.br&sz=128" class="w-12 sm:w-16 h-12 sm:h-16 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform rounded-xl">
+                                      </div>
+                                      <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all"></div>
+                                      
+                                      <div class="absolute bottom-3 left-3">
+                                          <span class="block text-xs font-bold text-white tracking-wide truncate pr-2">Sufgang</span>
+                                          <span class="text-[10px] text-gray-400">Street Culture</span>
+                                      </div>
+                                      <div class="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
+                                          <div class="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
+                                              <i data-lucide="arrow-up-right" class="w-3 h-3 text-black"></i>
+                                          </div>
+                                      </div>
+                                  </a>
+                                  
+                                  <!-- Card 3: Class Official -->
+                                  <a href="https://www.classofficial.com.br/" target="_blank" class="cursor-pointer group relative aspect-[4/3] bg-zinc-900 rounded-xl overflow-hidden border border-white/10 hover:border-accent/50 transition-all shadow-lg hover:shadow-accent/20 block">
+                                      <div class="absolute inset-0 bg-gradient-to-br from-green-900/40 to-teal-900/40 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+                                      <div class="absolute inset-0 flex items-center justify-center">
+                                          <img src="https://www.google.com/s2/favicons?domain=www.classofficial.com.br&sz=128" class="w-12 sm:w-16 h-12 sm:h-16 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform rounded-xl">
+                                      </div>
+                                      <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all"></div>
+                                      
+                                      <div class="absolute bottom-3 left-3">
+                                          <span class="block text-xs font-bold text-white tracking-wide truncate pr-2">Class</span>
+                                          <span class="text-[10px] text-gray-400">Authentic Wear</span>
+                                      </div>
+                                      <div class="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
+                                          <div class="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
+                                              <i data-lucide="arrow-up-right" class="w-3 h-3 text-black"></i>
+                                          </div>
+                                      </div>
+                                  </a>
+                                  
+                                  <!-- Card 4: Murk -->
+                                  <a href="https://murk.com.br/" target="_blank" class="cursor-pointer group relative aspect-[4/3] bg-zinc-900 rounded-xl overflow-hidden border border-white/10 hover:border-accent/50 transition-all shadow-lg hover:shadow-accent/20 block">
+                                      <div class="absolute inset-0 bg-gradient-to-br from-gray-900/40 to-white/10 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+                                      <div class="absolute inset-0 flex items-center justify-center">
+                                          <img src="https://www.google.com/s2/favicons?domain=murk.com.br&sz=128" class="w-12 sm:w-16 h-12 sm:h-16 object-contain drop-shadow-md transform group-hover:scale-110 transition-transform rounded-xl">
+                                      </div>
+                                      <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all"></div>
+                                      
+                                      <div class="absolute bottom-3 left-3">
+                                          <span class="block text-xs font-bold text-white tracking-wide truncate pr-2">Murk</span>
+                                          <span class="text-[10px] text-gray-400">Underground</span>
+                                      </div>
+                                      <div class="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
+                                          <div class="w-5 h-5 sm:w-6 sm:h-6 bg-white rounded-full flex items-center justify-center">
+                                              <i data-lucide="arrow-up-right" class="w-3 h-3 text-black"></i>
+                                          </div>
+                                      </div>
+                                  </a>
+                              </div>
+                          </div>
+
+                          <!-- VIEW 2: IFRAME (Hidden initially) -->
+            </div>
+            
+            <div class="text-center mt-12">
+                <p class="text-sm text-gray-500">Navegue pelo site acima como se estivesse usando.</p>
+            </div>
+        </section>
+
+        <!-- NOVA SEÇÃO: INTEGRAÇÕES -->
+        <section id="integrations" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto border-t border-white/5 scroll-mt-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Texto -->
+                <div class="reveal-integrations-text order-1">
+                    <h2 class="text-sm font-bold text-accent uppercase tracking-widest mb-2">Integrações personalizadas</h2>
+                    <h3 class="text-3xl md:text-4xl font-display font-bold leading-tight mb-6">
+                        Conecte tudo. <br>
+                        <span class="text-white">Sem limites.</span>
+                    </h3>
+                    <p class="text-gray-400 text-lg leading-relaxed">
+                        Aproveitamos ao máximo os recursos da Shopify, integrando sua loja a soluções de pagamento, controle de estoque, marketing e aplicativos compatíveis com seu negócio.
+                    </p>
+                    <p class="text-gray-400 text-lg leading-relaxed mt-4">
+                        Simplifique processos, automatize tarefas e foque no que realmente importa: vender mais. Tudo de forma prática, com tecnologia avançada e implementação descomplicada.
+                    </p>
+                </div>
+
+                <!-- Grid Visual -->
+                <div class="reveal-integrations-img order-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Card 1: Pagamento -->
+                    <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                         <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
+                            <i data-lucide="credit-card" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-1">Pagamentos</h4>
+                        <p class="text-xs text-gray-400">Gateways transparentes e checkout seguro.</p>
+                    </div>
+                    <!-- Card 2: Estoque -->
+                    <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                         <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
+                            <i data-lucide="package-search" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-1">Estoque</h4>
+                        <p class="text-xs text-gray-400">Controle automatizado e ERPs.</p>
+                    </div>
+                    <!-- Card 3: Marketing -->
+                    <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                         <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
+                            <i data-lucide="megaphone" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-1">Marketing</h4>
+                        <p class="text-xs text-gray-400">Pixels, CRM e e-mail marketing.</p>
+                    </div>
+                    <!-- Card 4: Apps -->
+                    <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                         <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
+                            <i data-lucide="plug" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-1">Apps</h4>
+                        <p class="text-xs text-gray-400">Extensões compatíveis com seu negócio.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVA SEÇÃO: MOBILE FIRST -->
+        <section id="mobile-first" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto border-t border-white/5 scroll-mt-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <!-- Image -->
+                <div class="reveal-mobile-img order-1 md:order-2">
+                      <div class="relative group">
+                        <!-- Removed gradient glow div -->
+                        <img src="https://i.imgur.com/1DRGIXD.png" alt="Mobile First Design" class="relative rounded-2xl w-full object-cover transform transition-transform duration-500 hover:scale-[1.02]">
+                      </div>
+                </div>
+                <!-- Text -->
+                <div class="reveal-mobile-text order-2 md:order-1 space-y-6">
+                    <div>
+                        <h2 class="text-sm font-bold text-accent uppercase tracking-widest mb-2">Mobile First</h2>
+                        <h3 class="text-3xl md:text-4xl font-display font-bold leading-tight">
+                            Seu cliente compra <br> <span class="text-white">pelo celular.</span>
+                        </h3>
+                    </div>
+                    <p class="text-gray-400 text-lg leading-relaxed">
+                        Sabemos que mais de 80% do tráfego em lançamentos de streetwear vem de dispositivos móveis. Por isso, não apenas "adaptamos" para mobile — nós <strong>criamos</strong> para mobile.
+                    </p>
+                    <p class="text-gray-400 text-lg leading-relaxed">
+                        Navegação fluida, botões acessíveis e checkout simplificado na palma da mão. Garantimos que a experiência do usuário seja impecável, aumentando a conversão onde realmente importa.
+                    </p>
+                      <div class="flex items-center gap-4 pt-2">
+                        <div class="flex -space-x-4">
+                            <div class="w-10 h-10 rounded-full border-2 border-[#050505] bg-surface flex items-center justify-center text-xs"><i data-lucide="smartphone" class="w-4 h-4 text-white"></i></div>
+                            <div class="w-10 h-10 rounded-full border-2 border-[#050505] bg-surface flex items-center justify-center text-xs"><i data-lucide="zap" class="w-4 h-4 text-white"></i></div>
+                            <div class="w-10 h-10 rounded-full border-2 border-[#050505] bg-surface flex items-center justify-center text-xs"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                        </div>
+                        <span class="text-sm font-medium text-white">Otimização máxima</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVA SEÇÃO: AVALIAÇÕES (Carrossel no mobile) -->
+        <section id="testimonials" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto border-t border-white/5 scroll-mt-20">
+            <div class="text-center mb-16 reveal-testimonials-title">
+                <h2 class="text-3xl md:text-4xl font-display font-bold leading-tight">
+                    Quem confia no <span class="text-accent">nosso hype.</span>
+                </h2>
+                <p class="text-gray-400 mt-4">Resultados reais de marcas que elevaram o nível.</p>
+            </div>
+
+            <!-- Alterado: Layout flex com scroll horizontal no mobile e grid no desktop -->
+            <div id="testimonials-container" class="flex md:grid md:grid-cols-3 overflow-x-auto md:overflow-visible gap-6 snap-x snap-mandatory scroll-smooth no-scrollbar pb-4 md:pb-0">
+                <!-- Testimonial 1 -->
+                <div class="card-3d-hover reveal-testimonial p-8 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/30 flex flex-col justify-between min-w-[85vw] md:min-w-0 snap-center shrink-0" data-tilt data-tilt-glare data-tilt-max-glare="0.05">
+                    <div>
+                        <div class="flex items-center gap-1 mb-4 text-accent">
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <p class="text-gray-300 text-sm leading-relaxed italic mb-6">
+                            "O drop foi insano! O site aguentou 5 mil acessos simultâneos sem travar nada. A conversão aumentou muito com o checkout otimizado que a GST fez."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-4 border-t border-white/5 pt-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold text-white">M</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Matheus S.</h4>
+                            <p class="text-xs text-gray-500">CEO, Midnight Clothing</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="card-3d-hover reveal-testimonial p-8 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/30 flex flex-col justify-between min-w-[85vw] md:min-w-0 snap-center shrink-0" data-tilt data-tilt-glare data-tilt-max-glare="0.05">
+                    <div>
+                        <div class="flex items-center gap-1 mb-4 text-accent">
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <p class="text-gray-300 text-sm leading-relaxed italic mb-6">
+                            "Eles entenderam exatamente a estética que eu queria. Não ficou parecendo aquele site padrão de Shopify, ficou com identidade de marca gringa. Recomendo demais."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-4 border-t border-white/5 pt-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold text-white">L</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Lucas R.</h4>
+                            <p class="text-xs text-gray-500">Fundador, Urban Soul</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="card-3d-hover reveal-testimonial p-8 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/30 flex flex-col justify-between min-w-[85vw] md:min-w-0 snap-center shrink-0" data-tilt data-tilt-glare data-tilt-max-glare="0.05">
+                    <div>
+                        <div class="flex items-center gap-1 mb-4 text-accent">
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        </div>
+                        <p class="text-gray-300 text-sm leading-relaxed italic mb-6">
+                            "Profissionalismo do início ao fim. O suporte no dia do lançamento fez toda a diferença. Já fechamos o próximo projeto com eles."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-4 border-t border-white/5 pt-4">
+                        <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center font-bold text-white">G</div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Gabriel P.</h4>
+                            <p class="text-xs text-gray-500">Diretor, Hype Supply</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: O QUE A GST FAZ? (Agência) -->
+        <section id="agency" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto border-t border-white/5 scroll-mt-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8 reveal-agency-text">
+                    <div>
+                        <h2 class="text-sm font-bold text-accent uppercase tracking-widest mb-2">A Agência</h2>
+                        <h3 class="text-4xl md:text-5xl font-display font-bold leading-tight">
+                            Elevamos o hype <br> da sua marca.
+                        </h3>
+                    </div>
+                    <p class="text-gray-400 text-lg leading-relaxed">
+                        A <strong>GSTDESIGN</strong> nasceu da necessidade de conectar a estética das ruas com a tecnologia de ponta. Sabemos que no cenário do Streetwear, a imagem é tudo.
+                    </p>
+                    <p class="text-gray-400 text-lg leading-relaxed">
+                        Nosso foco é desenvolver e-commerces de alta performance utilizando o ecossistema <strong>Shopify</strong>, garantindo que seu "drop" aguente o tráfego e converta visitantes em fãs leais da marca. Não entregamos apenas código, entregamos identidade cultural.
+                    </p>
+                    
+                    <div class="pt-4 flex gap-8">
+                        <div>
+                            <span class="block text-3xl font-bold text-white mb-1">+50</span>
+                            <span class="text-sm text-gray-500">Marcas Atendidas</span>
+                        </div>
+                        <div>
+                            <span class="block text-3xl font-bold text-white mb-1">100%</span>
+                            <span class="text-sm text-gray-500">Foco em Moda</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Grid de Cards Substituindo a Imagem -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 reveal-agency-img">
+                    <!-- Card 1 -->
+                    <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">Alta Performance</h4>
+                        <p class="text-sm text-gray-400">Carregamento instantâneo para maximizar conversões em drops.</p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
+                            <i data-lucide="smartphone" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">Mobile First</h4>
+                        <p class="text-sm text-gray-400">Experiência perfeita onde seu público realmente está.</p>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
+                            <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">Foco em Vendas</h4>
+                        <p class="text-sm text-gray-400">Layouts otimizados para guiar o usuário até o checkout.</p>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
+                            <i data-lucide="layers" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">Escalabilidade</h4>
+                        <p class="text-sm text-gray-400">Estrutura pronta para crescer junto com sua marca.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: PROCESSO (ETAPAS) -->
+        <section id="process" class="py-24 bg-surface/30 border-y border-white/5 relative overflow-hidden scroll-mt-20">
+            <div class="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-accent/5 to-transparent pointer-events-none"></div>
+
+            <div class="w-[95%] md:w-[90%] max-w-6xl mx-auto relative z-10">
+                <div class="text-center mb-16 max-w-3xl mx-auto reveal-process-title">
+                    <h2 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">Workflow</h2>
+                    <h3 class="text-3xl md:text-4xl font-display font-bold mb-6">Conheça as etapas do processo</h3>
+                    <p class="text-gray-400">Após solicitar seu site profissional, seguimos um método ágil para garantir que seu lançamento aconteça no prazo.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Step 1 -->
+                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <span class="absolute top-6 right-6 text-4xl font-display font-bold text-white/5 group-hover:text-accent/10 transition-colors">01</span>
+                        <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent text-white group-hover:text-white transition-all">
+                            <i data-lucide="message-square" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">Briefing & Kick-off</h4>
+                        <p class="text-sm text-gray-400">Reunião para entender a identidade da marca, referências visuais e objetivos do projeto.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <span class="absolute top-6 right-6 text-4xl font-display font-bold text-white/5 group-hover:text-accent/10 transition-colors">02</span>
+                        <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent text-white group-hover:text-white transition-all">
+                            <i data-lucide="pen-tool" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">Design & UI</h4>
+                        <p class="text-sm text-gray-400">Criação do layout exclusivo no Figma. Você aprova cada detalhe visual antes de codificarmos.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <span class="absolute top-6 right-6 text-4xl font-display font-bold text-white/5 group-hover:text-accent/10 transition-colors">03</span>
+                        <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent text-white group-hover:text-white transition-all">
+                            <i data-lucide="code-2" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">Desenvolvimento</h4>
+                        <p class="text-sm text-gray-400">Implementação na Shopify, configuração de apps, meios de pagamento e domínio.</p>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <span class="absolute top-6 right-6 text-4xl font-display font-bold text-white/5 group-hover:text-accent/10 transition-colors">04</span>
+                        <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent text-white group-hover:text-white transition-all">
+                            <i data-lucide="rocket" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">Launch Day</h4>
+                        <p class="text-sm text-gray-400">Testes finais, otimização de velocidade e entrega da loja pronta para vender.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: SOBRE / CTA -->
+        <section id="contact" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto">
+            <div class="reveal-cta rounded-3xl bg-gradient-to-br from-white/10 to-transparent p-1 border border-white/10">
+                <div class="bg-[#0a0a0a] rounded-[22px] p-8 md:p-16 text-center overflow-hidden relative">
+                    <!-- Decorative Elements -->
+                    <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-accent/10 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
+                    
+                    <div class="relative z-10 w-full flex flex-col items-center">
+                        <h3 class="text-3xl md:text-5xl font-display font-bold mb-6">Pronto para lançar?</h3>
+                        <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+                            Sua marca merece um site que represente sua visão. Vamos criar algo único para o seu próximo lançamento.
+                        </p>
+                        <!-- FORMULARIO RESPONDI -->
+                        <div class="w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-white/5 flex flex-col items-center justify-center py-4">
+                            <div data-respondi-container="" data-respondi-mode="regular" data-respondi-src="https://form.respondi.app/LdUA77YT" data-respondi-width="75%" data-respondi-height="400px"></div><script>const bodyScript=document.querySelector('body'),hasScript=document.querySelector('#respondi_src');if(!hasScript){const script=document.createElement('script');script.setAttribute("async", "");document.body.appendChild(script),script.id='respondi_src',script.src='https://embed.respondi.app/embed.js';}</script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: FAQ (Movido para o final) -->
+        <section id="faq" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto scroll-mt-20">
+            <div class="text-center mb-12 reveal-faq-title">
+                <h2 class="text-3xl font-display font-bold mb-4">Dúvidas Frequentes</h2>
+                <p class="text-gray-400">Tudo o que você precisa saber antes de fechar o projeto.</p>
+            </div>
+
+            <div class="space-y-4 max-w-4xl mx-auto">
+                <!-- Pergunta 1 -->
+                <details class="reveal-faq-item group bg-white/5 border border-white/10 rounded-2xl p-4 [&_summary::-webkit-details-marker]:hidden open:bg-white/10 transition-colors">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-white">
+                        <h3 class="font-medium text-lg">Qual o prazo médio de entrega?</h3>
+                        <div class="white/10 rounded-full p-1">
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform group-open:rotate-180"></i>
+                        </div>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-gray-400">
+                        O prazo médio para um projeto completo de e-commerce é de 15 a 25 dias úteis, dependendo da complexidade do design e das funcionalidades solicitadas. Landing pages podem ser entregues em até 7 dias úteis.
+                    </p>
+                </details>
+
+                <!-- Pergunta 2 -->
+                <details class="reveal-faq-item group bg-white/5 border border-white/10 rounded-2xl p-4 [&_summary::-webkit-details-marker]:hidden open:bg-white/10 transition-colors">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-white">
+                        <h3 class="font-medium text-lg">Vocês trabalham com outras plataformas além da Shopify?</h3>
+                        <div class="white/10 rounded-full p-1">
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform group-open:rotate-180"></i>
+                        </div>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-gray-400">
+                        Somos especialistas em Shopify devido à sua estabilidade para lojas de alta conversão, mas também desenvolvemos projetos personalizados em WordPress/WooCommerce ou React para casos específicos.
+                    </p>
+                </details>
+
+                <!-- Pergunta 3 -->
+                <details class="reveal-faq-item group bg-white/5 border border-white/10 rounded-2xl p-4 [&_summary::-webkit-details-marker]:hidden open:bg-white/10 transition-colors">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-white">
+                        <h3 class="font-medium text-lg">O site é otimizado para mobile?</h3>
+                        <div class="white/10 rounded-full p-1">
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform group-open:rotate-180"></i>
+                        </div>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-gray-400">
+                        Absolutamente. Desenvolvemos com a filosofia "Mobile First", já que 80% do tráfego de marcas de streetwear vem de dispositivos móveis. Seu site será perfeito em qualquer tela.
+                    </p>
+                </details>
+
+                <!-- Pergunta 4 -->
+                <details class="reveal-faq-item group bg-white/5 border border-white/10 rounded-2xl p-4 [&_summary::-webkit-details-marker]:hidden open:bg-white/10 transition-colors">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-white">
+                        <h3 class="font-medium text-lg">Preciso pagar mensalidade?</h3>
+                        <div class="white/10 rounded-full p-1">
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform group-open:rotate-180"></i>
+                        </div>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-gray-400">
+                        Pelo nosso serviço de design e desenvolvimento, o pagamento é único. Você terá apenas os custos fixos da plataforma (Shopify) e domínio (anual), que são pagos diretamente aos provedores.
+                    </p>
+                </details>
+
+                <!-- Nova Pergunta 5 -->
+                <details class="reveal-faq-item group bg-white/5 border border-white/10 rounded-2xl p-4 [&_summary::-webkit-details-marker]:hidden open:bg-white/10 transition-colors">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-white">
+                        <h3 class="font-medium text-lg">Vocês oferecem suporte após a entrega?</h3>
+                        <div class="white/10 rounded-full p-1">
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform group-open:rotate-180"></i>
+                        </div>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-gray-400">
+                        Sim! Oferecemos 30 dias de suporte gratuito para correção de bugs e dúvidas operacionais. Após esse período, oferecemos pacotes de manutenção mensal ou suporte sob demanda.
+                    </p>
+                </details>
+
+                <!-- Nova Pergunta 6 -->
+                <details class="reveal-faq-item group bg-white/5 border border-white/10 rounded-2xl p-4 [&_summary::-webkit-details-marker]:hidden open:bg-white/10 transition-colors">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-white">
+                        <h3 class="font-medium text-lg">Como funciona o pagamento?</h3>
+                        <div class="white/10 rounded-full p-1">
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform group-open:rotate-180"></i>
+                        </div>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-gray-400">
+                        Trabalhamos com 50% de entrada para iniciar o projeto e 50% na entrega final. Aceitamos PIX com desconto ou parcelamento no cartão de crédito via link de pagamento.
+                    </p>
+                </details>
+
+                <!-- Nova Pergunta 7 -->
+                <details class="reveal-faq-item group bg-white/5 border border-white/10 rounded-2xl p-4 [&_summary::-webkit-details-marker]:hidden open:bg-white/10 transition-colors">
+                    <summary class="flex cursor-pointer items-center justify-between gap-1.5 text-white">
+                        <h3 class="font-medium text-lg">Vocês criam a identidade visual (Logo) também?</h3>
+                        <div class="white/10 rounded-full p-1">
+                            <i data-lucide="chevron-down" class="w-5 h-5 transition-transform group-open:rotate-180"></i>
+                        </div>
+                    </summary>
+                    <p class="mt-4 leading-relaxed text-gray-400">
+                        Nosso foco principal é Web Design e Desenvolvimento. No entanto, temos parceiros especialistas em Branding que podemos indicar para criar a identidade visual completa da sua marca antes de iniciarmos o site.
+                    </p>
+                </details>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="reveal-footer border-t border-white/5 py-12 bg-black mt-20">
+            <div class="w-[95%] md:w-[90%] max-w-6xl mx-auto px-6 flex flex-col items-center justify-center gap-6 text-center">
+                <!-- Logo Centralizada e Sem Texto -->
+                <div class="flex items-center justify-center">
+                    <img src="https://i.imgur.com/y9DwJcA.png" alt="GST Logo" class="h-10 w-auto object-contain opacity-70 hover:opacity-100 transition-opacity">
+                </div>
+                <!-- SOCIAL BADGES (NOVO) -->
+                <div class="flex flex-wrap items-center justify-center gap-6 mt-4">
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/gstttdesign" target="_blank" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
+                        <i class="fa-brands fa-instagram text-xl group-hover:scale-110 transition-transform"></i>
+                        <span class="text-sm font-medium">@gstttdesign</span>
+                    </a>
+                    
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/5547988147123" target="_blank" class="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group">
+                        <i class="fa-brands fa-whatsapp text-xl group-hover:scale-110 transition-transform"></i>
+                        <span class="text-sm font-medium">Entre em contato</span>
+                    </a>
+                </div>
+            </div>
+        </footer>
+
+        <!-- CUSTOM CONTEXT MENU (NOVO) -->
+        <div id="context-menu" class="fixed z-[100] w-56 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl opacity-0 invisible transform scale-95 transition-all duration-200 origin-top-left pointer-events-none">
+            <div class="p-1">
+                <a href="javascript:location.reload()" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    <span>Atualizar</span>
+                </a>
+                <a href="#home" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 rounded-lg hover:bg-white/10 hover:text-white transition-colors">
+                    <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                    <span>Voltar ao topo</span>
+                </a>
+                <div class="h-px bg-white/10 my-1"></div>
+                <button onclick="navigator.clipboard.writeText(window.location.href);" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 rounded-lg hover:bg-white/10 hover:text-white transition-colors text-left">
+                    <i data-lucide="link" class="w-4 h-4"></i>
+                    <span>Copiar Link</span>
+                </button>
+                 <a href="#contact" class="flex items-center gap-3 px-3 py-2 text-sm font-semibold text-accent rounded-lg hover:bg-accent/10 transition-colors">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    <span>Orçar Projeto</span>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+            
+            if (menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            } else {
+                menu.classList.add('open');
+                menuIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            }
+        }
+
+        // ScrollSpy Script
+        document.addEventListener('DOMContentLoaded', () => {
+            // NOTIFICATION LOGIC
+            const notification = document.getElementById('apple-notification');
+            if (notification) {
+                // Initial show after 5 seconds
+                setTimeout(() => {
+                    notification.classList.remove('translate-x-[150%]', 'opacity-0');
+                    // Hide after 6 seconds visible
+                    setTimeout(() => {
+                        notification.classList.add('translate-x-[150%]', 'opacity-0');
+                    }, 6000);
+                }, 5000);
+
+                // Repeat every 60 seconds
+                setInterval(() => {
+                    notification.classList.remove('translate-x-[150%]', 'opacity-0');
+                    setTimeout(() => {
+                        notification.classList.add('translate-x-[150%]', 'opacity-0');
+                    }, 6000);
+                }, 60000);
+            }
+
+            // AUTO-SCROLL LOGIC FOR TESTIMONIALS (Mobile Only)
+            const container = document.getElementById('testimonials-container');
+            if (container) {
+                setInterval(() => {
+                    // Check if mobile (width < 768px matches Tailwind 'md')
+                    if (window.innerWidth < 768) {
+                        const cardWidth = container.querySelector('div').offsetWidth + 24; // width + gap
+                        const maxScroll = container.scrollWidth - container.clientWidth;
+                        
+                        // If we've reached near the end, scroll back to start
+                        if (container.scrollLeft >= maxScroll - 10) {
+                            container.scrollTo({ left: 0, behavior: 'smooth' });
+                        } else {
+                            // Scroll to next item
+                            container.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                        }
+                    }
+                }, 4000); // 4 seconds interval
+            }
+
+            // ScrollSpy
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - 250)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('nav-link-active');
+                    link.classList.add('text-gray-400');
+                    link.classList.remove('text-white');
+                    
+                    if (link.dataset.target === current) {
+                        link.classList.add('nav-link-active');
+                        link.classList.remove('text-gray-400');
+                        link.classList.add('text-white');
+                    }
+                });
+            });
+
+            // SCROLL REVEAL CONFIGURATION
+            const sr = ScrollReveal({
+                origin: 'bottom',
+                distance: '30px',
+                duration: 1000,
+                delay: 200,
+                easing: 'cubic-bezier(0.5, 0, 0, 1)',
+                reset: false // Animation happens only once
+            });
+
+            // Navbar (from top)
+            sr.reveal('.reveal-nav', { origin: 'top', delay: 100, distance: '60px' });
+
+            // Hero Section
+            sr.reveal('.reveal-hero-badges', { delay: 300, distance: '20px' });
+            sr.reveal('.reveal-hero-title', { delay: 500, distance: '40px' });
+            sr.reveal('.reveal-hero-text', { delay: 700, distance: '40px' });
+            sr.reveal('.reveal-hero-buttons', { delay: 900, distance: '40px' });
+
+            // Benefits Section
+            sr.reveal('.reveal-benefits-title', { origin: 'left', delay: 200 });
+            sr.reveal('.reveal-card', { interval: 200 }); // Staggered cards
+
+            // Laptop Demo Reveal (Apenas o título)
+            sr.reveal('.reveal-demo-title', { delay: 200 });
+            
+            // NOTEBOOK LOGIC (OPEN/CLOSE ON SCROLL) - SUBSTITUÍDO SCROLLREVEAL POR INTERSECTION OBSERVER
+            const notebookContainer = document.querySelector('#notebook-container');
+            const laptopLid = document.querySelector('#laptop-lid');
+
+            if(notebookContainer && laptopLid) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Está na tela: abre o notebook
+                            laptopLid.classList.add('is-open');
+                        } else {
+                            // Saiu da tela: fecha o notebook
+                            laptopLid.classList.remove('is-open');
+                        }
+                    });
+                }, {
+                    threshold: 0.3 // Dispara quando 30% do notebook está visível
+                });
+                
+                observer.observe(notebookContainer);
+            }
+
+            // Integrations Section (New)
+            sr.reveal('.reveal-integrations-text', { origin: 'left', delay: 200 });
+            sr.reveal('.reveal-integrations-img', { origin: 'right', delay: 400 });
+
+            // Mobile First Section (New)
+            sr.reveal('.reveal-mobile-img', { origin: 'left', delay: 200 });
+            sr.reveal('.reveal-mobile-text', { origin: 'right', delay: 400 });
+
+            // Testimonials Section
+            sr.reveal('.reveal-testimonials-title', { delay: 200 });
+            sr.reveal('.reveal-testimonial', { interval: 200 });
+
+            // Agency Section
+            sr.reveal('.reveal-agency-text', { origin: 'left', delay: 200 });
+            sr.reveal('.reveal-agency-img', { origin: 'right', delay: 400 });
+
+            // Process Section
+            sr.reveal('.reveal-process-title', { delay: 200 });
+            // INICIALIZAÇÃO VANILLA TILT (Cards)
+            VanillaTilt.init(document.querySelectorAll(".card-3d-hover"), {
+                max: 15,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.2
+            });
+
+            // LOGICA DA LOGO 3D (SEGUINDO O MOUSE GLOBALMENTE)
+            // Removemos o VanillaTilt daqui para ter controle total sobre a rotação global sem zoom
+            const logo3d = document.querySelector(".logo-3d-interactive");
+            if (logo3d) {
+                // Adiciona transição suave para não ficar "travado"
+                logo3d.style.transition = "transform 0.1s ease-out";
+                
+                document.addEventListener("mousemove", (e) => {
+                    // Calcula a distância do mouse até o centro da tela
+                    // Dividimos por um fator (ex: 25) para suavizar o ângulo. Quanto maior o divisor, menor a rotação.
+                    const xAxis = (window.innerWidth / 2 - e.clientX) / 25; 
+                    const yAxis = (window.innerHeight / 2 - e.clientY) / 25;
+                    
+                    // Aplica a rotação. 
+                    // rotateY inverte o eixo X para olhar para a esquerda/direita corretamente
+                    // rotateX usa o eixo Y para olhar para cima/baixo
+                    logo3d.style.transform = `perspective(1000px) rotateY(${xAxis * -1}deg) rotateX(${yAxis}deg)`;
+                });
+            }
+
+            // CONTEXT MENU LOGIC (ADICIONADO)
+            const contextMenu = document.getElementById('context-menu');
+            const scope = document.querySelector('body');
+
+            scope.addEventListener('contextmenu', (event) => {
+                event.preventDefault();
+
+                const { clientX: mouseX, clientY: mouseY } = event;
+
+                // Normalize position within viewport
+                const menuWidth = contextMenu.offsetWidth || 224;
+                const menuHeight = contextMenu.offsetHeight || 160;
+                const winWidth = window.innerWidth;
+                const winHeight = window.innerHeight;
+
+                // Adjust X
+                let x = mouseX;
+                if (x + menuWidth > winWidth) {
+                    x = x - menuWidth;
+                    contextMenu.classList.remove('origin-top-left');
+                    contextMenu.classList.add('origin-top-right');
+                } else {
+                    contextMenu.classList.remove('origin-top-right');
+                    contextMenu.classList.add('origin-top-left');
+                }
+
+                // Adjust Y
+                let y = mouseY;
+                if (y + menuHeight > winHeight) {
+                    y = y - menuHeight;
+                    contextMenu.classList.remove('origin-top-left', 'origin-top-right');
+                    contextMenu.classList.add('origin-bottom-left');
+                    // Correct origin if right side too
+                    if(mouseX + menuWidth > winWidth) contextMenu.classList.add('origin-bottom-right');
+                }
+
+                contextMenu.style.top = `${y}px`;
+                contextMenu.style.left = `${x}px`;
+
+                // Animation classes
+                contextMenu.classList.remove('invisible', 'opacity-0', 'scale-95', 'pointer-events-none');
+                contextMenu.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (contextMenu) {
+                    // Check if click is outside menu
+                    if (!contextMenu.contains(e.target)) {
+                        contextMenu.classList.add('invisible', 'opacity-0', 'scale-95', 'pointer-events-none');
+                        contextMenu.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
