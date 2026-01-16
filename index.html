@@ -303,8 +303,6 @@
 
                 <!-- Botão de Ação (Desktop - Direita) -->
                 <div class="hidden md:flex items-center gap-4">
-                    <!-- Badge removido conforme solicitado -->
-
                     <a href="#contact" class="group relative inline-flex items-center justify-center px-6 py-2.5 overflow-hidden font-medium text-black transition duration-300 ease-out border border-white rounded-lg shadow-lg hover:shadow-white/20 animate-subtle-pulse">
                         <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -350,16 +348,15 @@
         <section id="home" class="min-h-screen flex items-center justify-center pt-32 pb-20 w-[95%] md:w-[90%] max-w-6xl mx-auto scroll-mt-28">
             <div class="text-center space-y-8">
                 
-                <!-- CONTAINER BADGES -->
+                <!-- CONTAINER BADGES (Ajustados para Mobile) -->
                 <div class="reveal-hero-badges flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="https://www.shopify.com/br/avaliacao-gratuita?term=shopify&adid=624666449027&campaignid=15436645174&branded_enterprise=1&BOID=brand&utm_medium=cpc&utm_source=google&gad_source=1&gad_campaignid=15436645174&gbraid=0AAAAADiv1InFJIg3goKut-0uUFtNsg-FY&gclid=CjwKCAiAvaLLBhBFEiwAYCNTfzmOb_V_lqTRwJFJvyGkaPGLe0pyhW4KCZygAdFzGIu5BdGAjaCFABoCf30QAvD_BwE" target="_blank" class="inline-flex h-10 min-w-[190px] items-center justify-center px-4 rounded-lg border border-shopify/30 bg-shopify/10 text-xs font-bold text-white backdrop-blur-sm hover:bg-shopify/20 transition-colors decoration-0">
-                        <!-- Mudança aqui: text-white para o ícone -->
-                        <i class="fa-brands fa-shopify text-lg mr-2 text-white"></i>
+                    <a href="https://www.shopify.com/br/avaliacao-gratuita?term=shopify&adid=624666449027&campaignid=15436645174&branded_enterprise=1&BOID=brand&utm_medium=cpc&utm_source=google&gad_source=1&gad_campaignid=15436645174&gbraid=0AAAAADiv1InFJIg3goKut-0uUFtNsg-FY&gclid=CjwKCAiAvaLLBhBFEiwAYCNTfzmOb_V_lqTRwJFJvyGkaPGLe0pyhW4KCZygAdFzGIu5BdGAjaCFABoCf30QAvD_BwE" target="_blank" class="inline-flex h-8 md:h-10 min-w-[150px] md:min-w-[190px] items-center justify-center px-3 md:px-4 rounded-lg border border-shopify/30 bg-shopify/10 text-[10px] md:text-xs font-bold text-white backdrop-blur-sm hover:bg-shopify/20 transition-colors decoration-0">
+                        <i class="fa-brands fa-shopify text-base md:text-lg mr-2 text-white"></i>
                         SHOPIFY EXPERTS
                     </a>
                     
-                    <a href="https://www.nuvemshop.com.br" target="_blank" class="inline-flex h-10 min-w-[190px] items-center justify-center px-4 rounded-lg border border-nuvemshop/50 bg-nuvemshop/30 text-xs font-bold text-white backdrop-blur-sm hover:bg-nuvemshop/50 transition-colors decoration-0">
-                        <img src="https://i.imgur.com/d5qlNN6.png" alt="Logo Nuvemshop" class="h-4 mr-2 object-contain filter brightness-0 invert">
+                    <a href="https://www.nuvemshop.com.br" target="_blank" class="inline-flex h-8 md:h-10 min-w-[150px] md:min-w-[190px] items-center justify-center px-3 md:px-4 rounded-lg border border-nuvemshop/50 bg-nuvemshop/30 text-[10px] md:text-xs font-bold text-white backdrop-blur-sm hover:bg-nuvemshop/50 transition-colors decoration-0">
+                        <img src="https://i.imgur.com/d5qlNN6.png" alt="Logo Nuvemshop" class="h-3 md:h-4 mr-2 object-contain filter brightness-0 invert">
                         NUVEMSHOP EXPERTS
                     </a>
                 </div>
@@ -1140,22 +1137,21 @@
             // AUTO-SCROLL LOGIC FOR TESTIMONIALS (Mobile Only)
             const container = document.getElementById('testimonials-container');
             if (container) {
-                setInterval(() => {
-                    // Check if mobile (width < 768px matches Tailwind 'md')
-                    if (window.innerWidth < 768) {
-                        const cardWidth = container.querySelector('div').offsetWidth + 24; // width + gap
-                        const maxScroll = container.scrollWidth - container.clientWidth;
-                        
-                        // If we've reached near the end, scroll back to start
-                        if (container.scrollLeft >= maxScroll - 10) {
-                            container.scrollTo({ left: 0, behavior: 'smooth' });
-                        } else {
-                            // Scroll to next item
-                            container.scrollBy({ left: cardWidth, behavior: 'smooth' });
-                        }
-                    }
-                }, 4000); // 4 seconds interval
+                // Removed automatic scrolling so users can drag manually as requested
+                // Kept snapping logic in CSS which is ideal for manual swipe/drag
             }
+
+            // FAQ ACCORDION LOGIC (Exclusive Open)
+            const details = document.querySelectorAll("details");
+            details.forEach((targetDetail) => {
+                targetDetail.addEventListener("click", () => {
+                    details.forEach((detail) => {
+                        if (detail !== targetDetail) {
+                            detail.removeAttribute("open");
+                        }
+                    });
+                });
+            });
 
             // ScrollSpy
             const sections = document.querySelectorAll('section');
