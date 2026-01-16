@@ -268,25 +268,6 @@
     <!-- Adiciona textura granulada para estética Streetwear/Premium -->
     <div class="fixed inset-0 z-[40] opacity-[0.04] pointer-events-none mix-blend-overlay" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%221%22/%3E%3C/svg%3E');"></div>
 
-    <!-- APPLE STYLE NOTIFICATION (Desktop Only) -->
-    <!-- Container alinhado com a navbar para posicionamento correto e com clique habilitado -->
-    <div class="fixed top-28 left-0 right-0 mx-auto w-[95%] md:w-[90%] max-w-6xl z-[60] pointer-events-none hidden md:flex justify-end">
-        <a href="#contact" id="apple-notification" class="pointer-events-auto cursor-pointer flex items-start gap-3 p-3 w-80 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl transform translate-x-[150%] opacity-0 transition-all duration-700 ease-in-out hover:bg-black/80">
-            <!-- App Icon (Apenas Logo, sem quadrado de fundo) -->
-            <div class="flex-shrink-0 w-10 h-10 overflow-hidden flex items-center justify-center">
-                <img src="https://i.imgur.com/y9DwJcA.png" alt="GST Logo" class="w-full h-full object-contain">
-            </div>
-            <!-- Content -->
-            <div class="flex-1 min-w-0">
-                <div class="flex items-center justify-between mb-0.5">
-                    <span class="text-[13px] font-semibold text-white tracking-wide">GSTDESIGN</span>
-                    <span class="text-[11px] text-gray-400">Há 1m</span>
-                </div>
-                <p class="text-[13px] text-white leading-snug">Olá! Vamos criar um site juntos? 🚀</p>
-            </div>
-        </a>
-    </div>
-
     <!-- Background Grid Effect -->
     <div class="fixed inset-0 bg-grid-pattern bg-[size:40px_40px] pointer-events-none z-0"></div>
     <div class="fixed inset-0 bg-gradient-to-t from-background via-transparent to-background pointer-events-none z-0"></div>
@@ -1157,27 +1138,6 @@
 
         // ScrollSpy Script
         document.addEventListener('DOMContentLoaded', () => {
-            // NOTIFICATION LOGIC
-            const notification = document.getElementById('apple-notification');
-            if (notification) {
-                // Initial show after 5 seconds
-                setTimeout(() => {
-                    notification.classList.remove('translate-x-[150%]', 'opacity-0');
-                    // Hide after 6 seconds visible
-                    setTimeout(() => {
-                        notification.classList.add('translate-x-[150%]', 'opacity-0');
-                    }, 6000);
-                }, 5000);
-
-                // Repeat every 60 seconds
-                setInterval(() => {
-                    notification.classList.remove('translate-x-[150%]', 'opacity-0');
-                    setTimeout(() => {
-                        notification.classList.add('translate-x-[150%]', 'opacity-0');
-                    }, 6000);
-                }, 60000);
-            }
-
             // AUTO-SCROLL LOGIC FOR TESTIMONIALS (Mobile Only)
             const container = document.getElementById('testimonials-container');
             if (container) {
