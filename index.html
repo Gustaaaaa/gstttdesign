@@ -113,42 +113,17 @@
             max-height: 500px;
             opacity: 1;
         }
-        /* Custom Scrollbar (Desktop) */
+        
+        /* SCROLL INVISÍVEL GLOBAL (DESKTOP & MOBILE) */
         ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #050505;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            display: none !important;
+            width: 0px !important;
+            background: transparent !important;
         }
         
-        /* HIDE SCROLLBAR ON MOBILE (GLOBAL) */
-        @media (max-width: 768px) {
-            ::-webkit-scrollbar {
-                display: none !important;
-                width: 0px !important;
-                background: transparent !important;
-            }
-            * {
-                -ms-overflow-style: none !important;  /* IE and Edge */
-                scrollbar-width: none !important;  /* Firefox */
-            }
-        }
-        
-        /* Hide scrollbar for Chrome, Safari and Opera (Utility Class) */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        /* Hide scrollbar for IE, Edge and Firefox (Utility Class) */
-        .no-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+        * {
+            -ms-overflow-style: none !important;  /* IE and Edge */
+            scrollbar-width: none !important;  /* Firefox */
         }
         
         /* FAQ Animation */
@@ -259,6 +234,16 @@
             -o-user-drag: none;
             user-drag: none;
             pointer-events: auto;        /* Garante que cliques ainda funcionem, mas bloqueia seleção/arraste */
+        }
+
+        /* ANIMAÇÃO NAVBAR DESKTOP (SCROLL) - ADICIONADO */
+        .nav-hidden {
+            transform: translateY(-200%) !important;
+        }
+        
+        /* Otimização de Performance para Navbar */
+        .reveal-nav {
+            will-change: transform;
         }
     </style>
 </head>
@@ -901,9 +886,9 @@
                     <p class="text-gray-400">Após solicitar seu site profissional, seguimos um método ágil para garantir que seu lançamento aconteça no prazo.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:flex lg:gap-6">
                     <!-- Step 1 -->
-                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden lg:flex-1 lg:hover:flex-[3] transition-[flex] duration-500 ease-in-out" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
                         <span class="absolute top-6 right-6 text-4xl font-display font-bold text-white/5 group-hover:text-accent/10 transition-colors">01</span>
                         <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent text-white group-hover:text-white transition-all">
                             <i data-lucide="message-square" class="w-6 h-6"></i>
@@ -913,7 +898,7 @@
                     </div>
 
                     <!-- Step 2 -->
-                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden lg:flex-1 lg:hover:flex-[3] transition-[flex] duration-500 ease-in-out" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
                         <span class="absolute top-6 right-6 text-4xl font-display font-bold text-white/5 group-hover:text-accent/10 transition-colors">02</span>
                         <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent text-white group-hover:text-white transition-all">
                             <i data-lucide="pen-tool" class="w-6 h-6"></i>
@@ -923,7 +908,7 @@
                     </div>
 
                     <!-- Step 3 -->
-                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden lg:flex-1 lg:hover:flex-[3] transition-[flex] duration-500 ease-in-out" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
                         <span class="absolute top-6 right-6 text-4xl font-display font-bold text-white/5 group-hover:text-accent/10 transition-colors">03</span>
                         <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent text-white group-hover:text-white transition-all">
                             <i data-lucide="code-2" class="w-6 h-6"></i>
@@ -933,7 +918,7 @@
                     </div>
 
                     <!-- Step 4 -->
-                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden lg:flex-1 lg:hover:flex-[3] transition-[flex] duration-500 ease-in-out" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
                         <span class="absolute top-6 right-6 text-4xl font-display font-bold text-white/5 group-hover:text-accent/10 transition-colors">04</span>
                         <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 group-hover:bg-accent text-white group-hover:text-white transition-all">
                             <i data-lucide="rocket" class="w-6 h-6"></i>
@@ -1136,16 +1121,64 @@
             }
         }
 
-        // ScrollSpy Script
+        // SCROLL & ANIMATIONS LOGIC - OTIMIZADO
         document.addEventListener('DOMContentLoaded', () => {
-            // AUTO-SCROLL LOGIC FOR TESTIMONIALS (Mobile Only)
-            const container = document.getElementById('testimonials-container');
-            if (container) {
-                // Removed automatic scrolling so users can drag manually as requested
-                // Kept snapping logic in CSS which is ideal for manual swipe/drag
+            
+            // 2. SCROLL LOGIC THROTTLED (PERFORMANCE FIX)
+            // Em vez de rodar a cada pixel, roda no ritmo do refresh da tela
+            let lastScrollTop = 0;
+            let ticking = false;
+            
+            const navbar = document.querySelector('nav');
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            function updateScrollLogic() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                // A. Navbar Hide/Show Logic (Desktop Only)
+                if (window.innerWidth >= 768) {
+                    if (scrollTop > lastScrollTop && scrollTop > 100) {
+                        navbar.classList.add('nav-hidden');
+                    } else {
+                        navbar.classList.remove('nav-hidden');
+                    }
+                }
+                
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+
+                // B. ScrollSpy Logic (Active Menu Highlight)
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    // trigger point adjusted to be slightly above center
+                    if (scrollTop >= (sectionTop - 250)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    // Reset classes
+                    link.classList.remove('nav-link-active', 'text-white');
+                    link.classList.add('text-gray-400');
+                    
+                    if (link.dataset.target === current) {
+                        link.classList.add('nav-link-active', 'text-white');
+                        link.classList.remove('text-gray-400');
+                    }
+                });
+
+                ticking = false;
             }
 
-            // FAQ ACCORDION LOGIC (Exclusive Open)
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateScrollLogic);
+                    ticking = true;
+                }
+            }, { passive: true }); // passive: true melhora performance de scroll
+
+            // 3. FAQ ACCORDION LOGIC
             const details = document.querySelectorAll("details");
             details.forEach((targetDetail) => {
                 targetDetail.addEventListener("click", () => {
@@ -1157,34 +1190,7 @@
                 });
             });
 
-            // ScrollSpy
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.nav-link');
-
-            window.addEventListener('scroll', () => {
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.clientHeight;
-                    if (pageYOffset >= (sectionTop - 250)) {
-                        current = section.getAttribute('id');
-                    }
-                });
-
-                navLinks.forEach(link => {
-                    link.classList.remove('nav-link-active');
-                    link.classList.add('text-gray-400');
-                    link.classList.remove('text-white');
-                    
-                    if (link.dataset.target === current) {
-                        link.classList.add('nav-link-active');
-                        link.classList.remove('text-gray-400');
-                        link.classList.add('text-white');
-                    }
-                });
-            });
-
-            // SCROLL REVEAL CONFIGURATION
+            // 4. SCROLL REVEAL CONFIGURATION
             const sr = ScrollReveal({
                 origin: 'bottom',
                 distance: '30px',
@@ -1194,23 +1200,26 @@
                 reset: false // Animation happens only once
             });
 
-            // Navbar (from top)
             sr.reveal('.reveal-nav', { origin: 'top', delay: 100, distance: '60px' });
-
-            // Hero Section
             sr.reveal('.reveal-hero-badges', { delay: 300, distance: '20px' });
             sr.reveal('.reveal-hero-title', { delay: 500, distance: '40px' });
             sr.reveal('.reveal-hero-text', { delay: 700, distance: '40px' });
             sr.reveal('.reveal-hero-buttons', { delay: 900, distance: '40px' });
-
-            // Benefits Section
             sr.reveal('.reveal-benefits-title', { origin: 'left', delay: 200 });
-            sr.reveal('.reveal-card', { interval: 200 }); // Staggered cards
-
-            // Laptop Demo Reveal (Apenas o título)
+            sr.reveal('.reveal-card', { interval: 200 }); 
             sr.reveal('.reveal-demo-title', { delay: 200 });
-            
-            // NOTEBOOK LOGIC (OPEN/CLOSE ON SCROLL) - SUBSTITUÍDO SCROLLREVEAL POR INTERSECTION OBSERVER
+            sr.reveal('.reveal-integrations-text', { origin: 'left', delay: 200 });
+            sr.reveal('.reveal-integrations-img', { origin: 'right', delay: 400 });
+            sr.reveal('.reveal-mobile-img', { origin: 'left', delay: 200 });
+            sr.reveal('.reveal-mobile-text', { origin: 'right', delay: 400 });
+            sr.reveal('.reveal-testimonials-title', { delay: 200 });
+            sr.reveal('.reveal-testimonial', { interval: 200 });
+            sr.reveal('.reveal-agency-text', { origin: 'left', delay: 200 });
+            sr.reveal('.reveal-agency-img', { origin: 'right', delay: 400 });
+            sr.reveal('.reveal-process-title', { delay: 200 });
+            sr.reveal('.reveal-step', { interval: 200 }); 
+
+            // 5. NOTEBOOK LOGIC (Intersection Observer - Highly Performant)
             const notebookContainer = document.querySelector('#notebook-container');
             const laptopLid = document.querySelector('#laptop-lid');
 
@@ -1218,41 +1227,19 @@
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            // Está na tela: abre o notebook
                             laptopLid.classList.add('is-open');
                         } else {
-                            // Saiu da tela: fecha o notebook
                             laptopLid.classList.remove('is-open');
                         }
                     });
                 }, {
-                    threshold: 0.3 // Dispara quando 30% do notebook está visível
+                    threshold: 0.3
                 });
                 
                 observer.observe(notebookContainer);
             }
 
-            // Integrations Section (New)
-            sr.reveal('.reveal-integrations-text', { origin: 'left', delay: 200 });
-            sr.reveal('.reveal-integrations-img', { origin: 'right', delay: 400 });
-
-            // Mobile First Section (New)
-            sr.reveal('.reveal-mobile-img', { origin: 'left', delay: 200 });
-            sr.reveal('.reveal-mobile-text', { origin: 'right', delay: 400 });
-
-            // Testimonials Section
-            sr.reveal('.reveal-testimonials-title', { delay: 200 });
-            sr.reveal('.reveal-testimonial', { interval: 200 });
-
-            // Agency Section
-            sr.reveal('.reveal-agency-text', { origin: 'left', delay: 200 });
-            sr.reveal('.reveal-agency-img', { origin: 'right', delay: 400 });
-
-            // Process Section
-            sr.reveal('.reveal-process-title', { delay: 200 });
-            sr.reveal('.reveal-step', { interval: 200 }); // ADICIONADO PARA OS PASSOS DO WORKFLOW
-
-            // INICIALIZAÇÃO VANILLA TILT (Cards)
+            // 6. VANILLA TILT
             VanillaTilt.init(document.querySelectorAll(".card-3d-hover"), {
                 max: 15,
                 speed: 400,
@@ -1260,42 +1247,18 @@
                 "max-glare": 0.2
             });
 
-            // LOGICA DA LOGO 3D (SEGUINDO O MOUSE GLOBALMENTE)
-            // Removemos o VanillaTilt daqui para ter controle total sobre a rotação global sem zoom
-            const logo3d = document.querySelector(".logo-3d-interactive");
-            if (logo3d) {
-                // Adiciona transição suave para não ficar "travado"
-                logo3d.style.transition = "transform 0.1s ease-out";
-                
-                document.addEventListener("mousemove", (e) => {
-                    // Calcula a distância do mouse até o centro da tela
-                    // Dividimos por um fator (ex: 25) para suavizar o ângulo. Quanto maior o divisor, menor a rotação.
-                    const xAxis = (window.innerWidth / 2 - e.clientX) / 25; 
-                    const yAxis = (window.innerHeight / 2 - e.clientY) / 25;
-                    
-                    // Aplica a rotação. 
-                    // rotateY inverte o eixo X para olhar para a esquerda/direita corretamente
-                    // rotateX usa o eixo Y para olhar para cima/baixo
-                    logo3d.style.transform = `perspective(1000px) rotateY(${xAxis * -1}deg) rotateX(${yAxis}deg)`;
-                });
-            }
-
-            // CONTEXT MENU LOGIC (ADICIONADO)
+            // 7. CONTEXT MENU LOGIC
             const contextMenu = document.getElementById('context-menu');
             const scope = document.querySelector('body');
 
             scope.addEventListener('contextmenu', (event) => {
                 event.preventDefault();
-
                 const { clientX: mouseX, clientY: mouseY } = event;
-
-                // Normalize position within viewport
                 const menuWidth = contextMenu.offsetWidth || 224;
                 const menuHeight = contextMenu.offsetHeight || 160;
                 const winWidth = window.innerWidth;
                 const winHeight = window.innerHeight;
 
-                // Adjust X
                 let x = mouseX;
                 if (x + menuWidth > winWidth) {
                     x = x - menuWidth;
@@ -1306,27 +1269,22 @@
                     contextMenu.classList.add('origin-top-left');
                 }
 
-                // Adjust Y
                 let y = mouseY;
                 if (y + menuHeight > winHeight) {
                     y = y - menuHeight;
                     contextMenu.classList.remove('origin-top-left', 'origin-top-right');
                     contextMenu.classList.add('origin-bottom-left');
-                    // Correct origin if right side too
                     if(mouseX + menuWidth > winWidth) contextMenu.classList.add('origin-bottom-right');
                 }
 
                 contextMenu.style.top = `${y}px`;
                 contextMenu.style.left = `${x}px`;
-
-                // Animation classes
                 contextMenu.classList.remove('invisible', 'opacity-0', 'scale-95', 'pointer-events-none');
                 contextMenu.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
             });
 
             document.addEventListener('click', (e) => {
                 if (contextMenu) {
-                    // Check if click is outside menu
                     if (!contextMenu.contains(e.target)) {
                         contextMenu.classList.add('invisible', 'opacity-0', 'scale-95', 'pointer-events-none');
                         contextMenu.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
