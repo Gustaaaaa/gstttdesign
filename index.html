@@ -106,6 +106,10 @@
             scroll-snap-type: y mandatory; /* Força o travamento nas seções */
         }
 
+        /* FORÇAR OCULTAÇÃO DO CURSOR PADRÃO EM ELEMENTOS INTERATIVOS */
+        /* Isso resolve o problema do ponteiro aparecendo ao passar em links */
+        /* REMOVED CUSTOM CURSOR STYLES */
+
         /* Configuração das Seções para Snapping */
         section, footer {
             scroll-snap-align: start; /* O topo da seção alinha com o topo da tela */
@@ -259,6 +263,90 @@
         .reveal-nav {
             will-change: transform;
         }
+
+        /* --- INFO ICON & TOOLTIP STYLES (NOVO) --- */
+        .info-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
+            z-index: 50;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+        
+        .card-3d-hover:hover .info-icon {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-icon:hover {
+            background: rgba(37, 99, 235, 0.2); /* Accent color hint */
+            border-color: rgba(37, 99, 235, 0.5);
+        }
+
+        .info-icon i {
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .info-tooltip {
+            position: absolute;
+            top: 45px;
+            right: 12px;
+            width: 220px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.75rem; /* text-xs */
+            color: #d1d5db; /* gray-300 */
+            line-height: 1.4;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-10px) scale(0.95);
+            transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: 60;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.8);
+            text-align: left;
+        }
+
+        /* Setinha do tooltip */
+        .info-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            right: 6px;
+            width: 12px;
+            height: 12px;
+            background: inherit;
+            transform: rotate(45deg);
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            z-index: -1; 
+        }
+
+        .info-icon:hover + .info-tooltip {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Mobile override to keep hidden */
+        @media (max-width: 767px) {
+            .info-icon, .info-tooltip {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-background text-white font-sans min-h-screen relative overflow-x-hidden selection:bg-accent selection:text-white">
@@ -314,7 +402,7 @@
                             Home
                         </a>
                         <a href="#demo" class="nav-link text-gray-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all" data-target="demo">
-                            Demos
+                            Sites
                         </a>
                         <a href="#testimonials" class="nav-link text-gray-400 hover:text-white hover:bg-white/5 px-4 py-2 rounded-lg text-sm font-medium transition-all" data-target="testimonials">
                             Reviews
@@ -337,8 +425,8 @@
                         <span class="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-black group-hover:translate-x-0 ease">
                             <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </span>
-                        <span class="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform bg-white group-hover:translate-x-full ease">Orçar Site</span>
-                        <span class="relative invisible">Orçar Site</span>
+                        <span class="absolute flex items-center justify-center w-full h-full text-black transition-all duration-300 transform bg-white group-hover:translate-x-full ease">Fale Conosco</span>
+                        <span class="relative invisible">Fale Conosco</span>
                     </a>
                 </div>
 
@@ -357,7 +445,7 @@
         <div class="mobile-menu md:hidden border-t border-white/5" id="mobile-menu">
             <div class="px-4 pt-2 pb-4 space-y-1">
                 <a href="#home" onclick="toggleMenu()" class="text-white block px-3 py-2 rounded-lg text-base font-medium bg-white/10">Home</a>
-                <a href="#demo" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Demos</a>
+                <a href="#demo" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Sites</a>
                 <a href="#testimonials" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Reviews</a>
                 <a href="#agency" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Agência</a>
                 <a href="#process" onclick="toggleMenu()" class="text-gray-300 hover:text-white hover:bg-white/5 block px-3 py-2 rounded-lg text-base font-medium transition-colors">Processo</a>
@@ -382,12 +470,12 @@
                 <div class="reveal-hero-badges flex flex-row items-center justify-center gap-2 sm:gap-4 w-full px-2 max-w-lg mx-auto">
                     <a href="https://www.shopify.com/br/avaliacao-gratuita?term=shopify&adid=624666449027&campaignid=15436645174&branded_enterprise=1&BOID=brand&utm_medium=cpc&utm_source=google&gad_source=1&gad_campaignid=15436645174&gbraid=0AAAAADiv1InFJIg3goKut-0uUFtNsg-FY&gclid=CjwKCAiAvaLLBhBFEiwAYCNTfzmOb_V_lqTRwJFJvyGkaPGLe0pyhW4KCZygAdFzGIu5BdGAjaCFABoCf30QAvD_BwE" target="_blank" class="flex-1 inline-flex h-9 sm:h-10 items-center justify-center px-2 sm:px-4 rounded-lg border border-shopify/30 bg-shopify/10 text-[10px] sm:text-xs font-bold text-white backdrop-blur-sm hover:bg-shopify/20 transition-colors decoration-0 whitespace-nowrap">
                         <i class="fa-brands fa-shopify text-sm sm:text-lg mr-1.5 text-white"></i>
-                        SHOPIFY EXPERTS
+                        SHOPIFY
                     </a>
                     
                     <a href="https://www.nuvemshop.com.br" target="_blank" class="flex-1 inline-flex h-9 sm:h-10 items-center justify-center px-2 sm:px-4 rounded-lg border border-nuvemshop/50 bg-nuvemshop/30 text-[10px] sm:text-xs font-bold text-white backdrop-blur-sm hover:bg-nuvemshop/50 transition-colors decoration-0 whitespace-nowrap">
                         <img src="https://i.imgur.com/d5qlNN6.png" alt="Logo Nuvemshop" class="h-2.5 sm:h-4 mr-1.5 object-contain filter brightness-0 invert">
-                        NUVEMSHOP EXPERTS
+                        NUVEMSHOP
                     </a>
                 </div>
 
@@ -428,9 +516,9 @@
                         </span>
                     </a>
                     
-                    <!-- Botão "Ver demos" - Tamanho fixo w-[240px] e h-14 -->
-                    <a href="#demo" class="inline-flex items-center justify-center w-full sm:w-[240px] h-14 bg-transparent border border-white/20 text-white font-medium rounded-lg hover:bg-white/5 transition-colors">
-                        Ver demos
+                    <!-- Botão "Ver sites" - Tamanho fixo w-[240px] e h-14 -->
+                    <a href="#demo" class="inline-flex items-center justify-center w-full sm:w-[240px] h-14 bg-white/5 backdrop-blur-md border border-white/20 text-white font-medium rounded-lg hover:bg-white/10 transition-all">
+                        Ver sites
                     </a>
                 </div>
             </div>
@@ -448,6 +536,14 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Card 1 -->
                 <div class="card-3d-hover reveal-card p-8 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <!-- Info Icon + Tooltip -->
+                    <div class="info-icon">
+                        <i data-lucide="info"></i>
+                    </div>
+                    <div class="info-tooltip">
+                        <strong>Solução Completa:</strong> Inclui configuração de domínio, gateway de pagamento, frete e checkout transparente.
+                    </div>
+
                     <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
                         <i data-lucide="layout" class="w-6 h-6"></i>
                     </div>
@@ -459,6 +555,14 @@
 
                 <!-- Card 2 -->
                 <div class="card-3d-hover reveal-card p-8 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <!-- Info Icon + Tooltip -->
+                    <div class="info-icon">
+                        <i data-lucide="info"></i>
+                    </div>
+                    <div class="info-tooltip">
+                        <strong>Zero Templates Genéricos:</strong> Layout desenvolvido do zero no Figma, alinhado à identidade da sua marca.
+                    </div>
+
                     <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
                         <i data-lucide="palette" class="w-6 h-6"></i>
                     </div>
@@ -470,6 +574,14 @@
 
                 <!-- Card 3 -->
                 <div class="card-3d-hover reveal-card p-8 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <!-- Info Icon + Tooltip -->
+                    <div class="info-icon">
+                        <i data-lucide="info"></i>
+                    </div>
+                    <div class="info-tooltip">
+                        <strong>Agilidade no Lançamento:</strong> Metodologia ágil que garante entrega do projeto em até 20 dias úteis.
+                    </div>
+
                     <div class="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center mb-6 text-accent group-hover:bg-accent group-hover:text-white transition-colors">
                         <i data-lucide="zap" class="w-6 h-6"></i>
                     </div>
@@ -477,6 +589,92 @@
                     <p class="text-gray-400 text-sm leading-relaxed">
                         Desenvolvemos de forma ágil, sem abrir mão da qualidade. Seu lançamento não pode esperar.
                     </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NOVA SEÇÃO: EXPERTS (Shopify & Nuvemshop) -->
+        <section id="experts" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto border-t border-white/5 scroll-mt-20">
+            <div class="text-center mb-16 reveal-experts-title">
+                <h2 class="text-3xl md:text-4xl font-display font-bold leading-tight">
+                    Plataformas que utilizamos <br>
+                    <span class="text-gray-400">Certificação e Autoridade.</span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Shopify Expert Card -->
+                <div class="card-3d-hover reveal-expert-card p-8 rounded-2xl bg-[#0a0a0a] border border-shopify/20 hover:border-shopify/50 group relative overflow-hidden transition-all duration-300" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <!-- Background Glow -->
+                    <div class="absolute -top-20 -right-20 w-64 h-64 bg-shopify/10 rounded-full blur-3xl group-hover:bg-shopify/20 transition-all duration-500"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 bg-shopify/10 rounded-xl flex items-center justify-center border border-shopify/20 text-shopify">
+                                <i class="fa-brands fa-shopify text-3xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-display font-bold text-white">Shopify</h3>
+                                <span class="text-xs font-bold tracking-wider text-shopify uppercase">Especialista Brasil</span>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-400 text-lg leading-relaxed mb-6">
+                            O selo <strong>Shopify Expert</strong> é concedido apenas a agências de elite aprovadas pela própria Shopify. Significa que temos acesso a recursos beta, suporte prioritário e um profundo conhecimento técnico para criar lojas de nível global.
+                        </p>
+                        
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-sm text-gray-300">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-shopify mr-3"></i>
+                                Desenvolvimento de Temas 2.0
+                            </li>
+                            <li class="flex items-center text-sm text-gray-300">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-shopify mr-3"></i>
+                                Migração de Plataforma Segura
+                            </li>
+                            <li class="flex items-center text-sm text-gray-300">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-shopify mr-3"></i>
+                                Otimização de Checkout (Shopify Plus)
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Nuvemshop Expert Card -->
+                <div class="card-3d-hover reveal-expert-card p-8 rounded-2xl bg-[#0a0a0a] border border-nuvemshop/30 hover:border-nuvemshop/60 group relative overflow-hidden transition-all duration-300" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                    <!-- Background Glow -->
+                    <div class="absolute -top-20 -right-20 w-64 h-64 bg-nuvemshop/10 rounded-full blur-3xl group-hover:bg-nuvemshop/20 transition-all duration-500"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-14 h-14 bg-nuvemshop/20 rounded-xl flex items-center justify-center border border-nuvemshop/30">
+                                <img src="https://i.imgur.com/d5qlNN6.png" alt="Logo Nuvemshop" class="w-8 h-auto filter brightness-0 invert">
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-display font-bold text-white">Nuvemshop</h3>
+                                <span class="text-xs font-bold tracking-wider text-[#7A87F0] uppercase">Especialista Brasil</span>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-400 text-lg leading-relaxed mb-6">
+                            Como parceiros <strong>Nuvemshop</strong>, dominamos a plataforma líder na América Latina. Entregamos lojas com design totalmente customizado (via FTP/Layout), fugindo dos templates padrões limitados do mercado.
+                        </p>
+                        
+                        <ul class="space-y-3">
+                            <li class="flex items-center text-sm text-gray-300">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#7A87F0] mr-3"></i>
+                                Layout 100% Customizado (CSS/HTML/JS)
+                            </li>
+                            <li class="flex items-center text-sm text-gray-300">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#7A87F0] mr-3"></i>
+                                Integrações Locais (Frete/Pagamento)
+                            </li>
+                            <li class="flex items-center text-sm text-gray-300">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-[#7A87F0] mr-3"></i>
+                                Suporte dedicado ao Lojista Brasileiro
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
@@ -670,6 +868,14 @@
                 <div class="reveal-integrations-img order-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <!-- Card 1: Pagamento -->
                     <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <!-- Info Icon + Tooltip -->
+                        <div class="info-icon">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <div class="info-tooltip">
+                            <strong>Gateways e Checkout:</strong> Integração com Mercado Pago, Pagar.me, Appmax e Yampi para alta conversão.
+                        </div>
+
                          <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
                             <i data-lucide="credit-card" class="w-5 h-5"></i>
                         </div>
@@ -678,6 +884,14 @@
                     </div>
                     <!-- Card 2: Estoque -->
                     <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <!-- Info Icon + Tooltip -->
+                        <div class="info-icon">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <div class="info-tooltip">
+                            <strong>ERP e Logística:</strong> Sincronização automática com Bling, Tiny e plataformas de frete.
+                        </div>
+
                          <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
                             <i data-lucide="package-search" class="w-5 h-5"></i>
                         </div>
@@ -686,6 +900,14 @@
                     </div>
                     <!-- Card 3: Marketing -->
                     <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <!-- Info Icon + Tooltip -->
+                        <div class="info-icon">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <div class="info-tooltip">
+                            <strong>Rastreamento Avançado:</strong> Configuração de Pixel do Facebook, TikTok Ads e Google Analytics 4 (GA4).
+                        </div>
+
                          <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
                             <i data-lucide="megaphone" class="w-5 h-5"></i>
                         </div>
@@ -694,6 +916,14 @@
                     </div>
                     <!-- Card 4: Apps -->
                     <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 hover:border-accent/30 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <!-- Info Icon + Tooltip -->
+                        <div class="info-icon">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <div class="info-tooltip">
+                            <strong>Ecossistema Shopify:</strong> Instalação de apps de reviews (Yotpo), upsell e recuperação de carrinho.
+                        </div>
+
                          <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
                             <i data-lucide="plug" class="w-5 h-5"></i>
                         </div>
@@ -707,13 +937,74 @@
         <!-- NOVA SEÇÃO: MOBILE FIRST -->
         <section id="mobile-first" class="py-24 w-[95%] md:w-[90%] max-w-6xl mx-auto border-t border-white/5 scroll-mt-20">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <!-- Image -->
+                
+                <!-- Cards Grid (Antiga Imagem) -->
                 <div class="reveal-mobile-img order-1 md:order-2">
-                      <div class="relative group">
-                        <!-- Removed gradient glow div -->
-                        <img src="https://i.imgur.com/1DRGIXD.png" alt="Mobile First Design" class="relative rounded-2xl w-full object-cover transform transition-transform duration-500 hover:scale-[1.02]">
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        
+                        <!-- Card 1 -->
+                        <div class="card-3d-hover p-5 rounded-xl bg-surface/50 border border-white/10 hover:border-accent/30 group" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                            <!-- Info Icon + Tooltip -->
+                            <div class="info-icon">
+                                <i data-lucide="info"></i>
+                            </div>
+                            <div class="info-tooltip">
+                                <strong>Fluidez Total:</strong> Grid responsivo que se ajusta perfeitamente a qualquer resolução de tela.
+                            </div>
+
+                            <i data-lucide="smartphone" class="w-8 h-8 text-accent mb-3"></i>
+                            <h4 class="font-bold text-white mb-1 font-display text-lg">Responsividade</h4>
+                            <p class="text-xs text-gray-400 leading-relaxed block">Layout que se adapta a qualquer tamanho de tela.</p>
+                        </div>
+
+                        <!-- Card 2 (Deslocado) -->
+                        <div class="card-3d-hover p-5 rounded-xl bg-surface/50 border border-white/10 hover:border-accent/30 group sm:translate-y-6" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                            <!-- Info Icon + Tooltip -->
+                            <div class="info-icon">
+                                <i data-lucide="info"></i>
+                            </div>
+                            <div class="info-tooltip">
+                                <strong>Performance Extrema:</strong> Imagens otimizadas e código minificado para carregamento instantâneo.
+                            </div>
+
+                             <i data-lucide="zap" class="w-8 h-8 text-accent mb-3"></i>
+                            <h4 class="font-bold text-white mb-1 font-display text-lg">Velocidade 5G</h4>
+                            <p class="text-xs text-gray-400 leading-relaxed block">Carregamento instantâneo mesmo no 4G/5G.</p>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="card-3d-hover p-5 rounded-xl bg-surface/50 border border-white/10 hover:border-accent/30 group" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                            <!-- Info Icon + Tooltip -->
+                            <div class="info-icon">
+                                <i data-lucide="info"></i>
+                            </div>
+                            <div class="info-tooltip">
+                                <strong>Navegação Intuitiva:</strong> Áreas de toque de 44px+ e menus pensados para uso com polegar.
+                            </div>
+
+                            <i data-lucide="mouse-pointer-2" class="w-8 h-8 text-accent mb-3"></i>
+                            <h4 class="font-bold text-white mb-1 font-display text-lg">UX Mobile</h4>
+                            <p class="text-xs text-gray-400 leading-relaxed block">Navegação e botões pensados para o polegar.</p>
+                        </div>
+
+                        <!-- Card 4 (Deslocado) -->
+                        <div class="card-3d-hover p-5 rounded-xl bg-surface/50 border border-white/10 hover:border-accent/30 group sm:translate-y-6" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                            <!-- Info Icon + Tooltip -->
+                            <div class="info-icon">
+                                <i data-lucide="info"></i>
+                            </div>
+                            <div class="info-tooltip">
+                                <strong>Conversão Rápida:</strong> Redução de fricção no carrinho para aumentar vendas móveis.
+                            </div>
+
+                             <i data-lucide="shopping-bag" class="w-8 h-8 text-accent mb-3"></i>
+                            <h4 class="font-bold text-white mb-1 font-display text-lg">Checkout Fácil</h4>
+                            <p class="text-xs text-gray-400 leading-relaxed block">Menos cliques para finalizar a compra no celular.</p>
+                        </div>
+
                       </div>
                 </div>
+
                 <!-- Text -->
                 <div class="reveal-mobile-text order-2 md:order-1 space-y-6">
                     <div>
@@ -754,6 +1045,7 @@
                 
                 <!-- Testimonial 1 -->
                 <div class="relative w-[85vw] max-w-[350px] md:w-auto md:max-w-none flex-shrink-0 snap-center card-3d-hover p-8 rounded-2xl bg-gradient-to-b from-[#111] to-[#050505] border border-white/10 hover:border-accent/40 flex flex-col justify-between group overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.05">
+                    
                     <!-- Decorative Quote -->
                     <div class="absolute top-4 right-6 text-6xl font-serif text-white/5 font-bold leading-none select-none pointer-events-none group-hover:text-accent/10 transition-colors">”</div>
                     
@@ -786,6 +1078,7 @@
 
                 <!-- Testimonial 2 -->
                 <div class="relative w-[85vw] max-w-[350px] md:w-auto md:max-w-none flex-shrink-0 snap-center card-3d-hover p-8 rounded-2xl bg-gradient-to-b from-[#111] to-[#050505] border border-white/10 hover:border-accent/40 flex flex-col justify-between group overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.05">
+                    
                     <!-- Decorative Quote -->
                     <div class="absolute top-4 right-6 text-6xl font-serif text-white/5 font-bold leading-none select-none pointer-events-none group-hover:text-accent/10 transition-colors">”</div>
 
@@ -817,6 +1110,7 @@
 
                 <!-- Testimonial 3 -->
                 <div class="relative w-[85vw] max-w-[350px] md:w-auto md:max-w-none flex-shrink-0 snap-center card-3d-hover p-8 rounded-2xl bg-gradient-to-b from-[#111] to-[#050505] border border-white/10 hover:border-accent/40 flex flex-col justify-between group overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.05">
+                    
                     <!-- Decorative Quote -->
                     <div class="absolute top-4 right-6 text-6xl font-serif text-white/5 font-bold leading-none select-none pointer-events-none group-hover:text-accent/10 transition-colors">”</div>
 
@@ -881,6 +1175,14 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 reveal-agency-img">
                     <!-- Card 1 -->
                     <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <!-- Info Icon + Tooltip -->
+                        <div class="info-icon">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <div class="info-tooltip">
+                            <strong>Google PageSpeed:</strong> Pontuação 90+ em performance, garantindo melhor SEO e experiência.
+                        </div>
+
                         <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
                             <i data-lucide="zap" class="w-5 h-5"></i>
                         </div>
@@ -889,6 +1191,14 @@
                     </div>
                     <!-- Card 2 -->
                     <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <!-- Info Icon + Tooltip -->
+                        <div class="info-icon">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <div class="info-tooltip">
+                            <strong>Foco Vertical:</strong> Desenvolvimento prioritário para telas de smartphones, onde o cliente está.
+                        </div>
+
                         <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
                             <i data-lucide="smartphone" class="w-5 h-5"></i>
                         </div>
@@ -897,6 +1207,14 @@
                     </div>
                     <!-- Card 3 -->
                     <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <!-- Info Icon + Tooltip -->
+                        <div class="info-icon">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <div class="info-tooltip">
+                            <strong>Gatilhos Mentais:</strong> Elementos de urgência e prova social estrategicamente posicionados no layout.
+                        </div>
+
                         <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
                             <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
                         </div>
@@ -905,6 +1223,14 @@
                     </div>
                     <!-- Card 4 -->
                     <div class="card-3d-hover p-6 rounded-2xl bg-surface/50 border border-white/10 group relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <!-- Info Icon + Tooltip -->
+                        <div class="info-icon">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <div class="info-tooltip">
+                            <strong>Código Limpo:</strong> Estrutura robusta pronta para receber novas features e crescer com a marca.
+                        </div>
+
                         <div class="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center mb-4 text-accent">
                             <i data-lucide="layers" class="w-5 h-5"></i>
                         </div>
@@ -926,7 +1252,7 @@
                     <p class="text-gray-400">Após solicitar seu site profissional, seguimos um método ágil para garantir que seu lançamento aconteça no prazo.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:flex lg:gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:flex lg:gap-6 gap-6">
                     <!-- Step 1 -->
                     <div class="card-3d-hover reveal-step p-6 rounded-2xl bg-[#0a0a0a] border border-white/10 hover:border-accent/50 group relative overflow-hidden lg:flex-1 lg:hover:flex-[3] transition-[flex] duration-500 ease-in-out" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
                         <span class="absolute top-6 right-6 text-4xl font-display font-bold text-white/5 group-hover:text-accent/10 transition-colors">01</span>
@@ -934,7 +1260,7 @@
                             <i data-lucide="message-square" class="w-6 h-6"></i>
                         </div>
                         <h4 class="text-lg font-bold mb-2">Briefing & Kick-off</h4>
-                        <p class="text-sm text-gray-400 max-h-0 opacity-0 overflow-hidden transition-all duration-500 group-hover:max-h-32 group-hover:opacity-100">Reunião para entender a identidade da marca, referências visuais e objetivos do projeto.</p>
+                        <p class="text-sm text-gray-400 overflow-hidden transition-all duration-500 max-h-32 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-32 md:group-hover:opacity-100">Reunião para entender a identidade da marca, referências visuais e objetivos do projeto.</p>
                     </div>
 
                     <!-- Step 2 -->
@@ -944,7 +1270,7 @@
                             <i data-lucide="pen-tool" class="w-6 h-6"></i>
                         </div>
                         <h4 class="text-lg font-bold mb-2">Design & UI</h4>
-                        <p class="text-sm text-gray-400 max-h-0 opacity-0 overflow-hidden transition-all duration-500 group-hover:max-h-32 group-hover:opacity-100">Criação do layout exclusivo no Figma. Você aprova cada detalhe visual antes de codificarmos.</p>
+                        <p class="text-sm text-gray-400 overflow-hidden transition-all duration-500 max-h-32 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-32 md:group-hover:opacity-100">Criação do layout exclusivo no Figma. Você aprova cada detalhe visual antes de codificarmos.</p>
                     </div>
 
                     <!-- Step 3 -->
@@ -954,7 +1280,7 @@
                             <i data-lucide="code-2" class="w-6 h-6"></i>
                         </div>
                         <h4 class="text-lg font-bold mb-2">Desenvolvimento</h4>
-                        <p class="text-sm text-gray-400 max-h-0 opacity-0 overflow-hidden transition-all duration-500 group-hover:max-h-32 group-hover:opacity-100">Implementação na Shopify, configuração de apps, meios de pagamento e domínio.</p>
+                        <p class="text-sm text-gray-400 overflow-hidden transition-all duration-500 max-h-32 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-32 md:group-hover:opacity-100">Implementação na Shopify, configuração de apps, meios de pagamento e domínio.</p>
                     </div>
 
                     <!-- Step 4 -->
@@ -964,7 +1290,7 @@
                             <i data-lucide="rocket" class="w-6 h-6"></i>
                         </div>
                         <h4 class="text-lg font-bold mb-2">Launch Day</h4>
-                        <p class="text-sm text-gray-400 max-h-0 opacity-0 overflow-hidden transition-all duration-500 group-hover:max-h-32 group-hover:opacity-100">Testes finais, otimização de velocidade e entrega da loja pronta para vender.</p>
+                        <p class="text-sm text-gray-400 overflow-hidden transition-all duration-500 max-h-32 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-32 md:group-hover:opacity-100">Testes finais, otimização de velocidade e entrega da loja pronta para vender.</p>
                     </div>
                 </div>
             </div>
@@ -981,7 +1307,7 @@
                     <div class="relative z-10 w-full flex flex-col items-center">
                         <h3 class="text-3xl md:text-5xl font-display font-bold mb-6">Pronto para lançar?</h3>
                         <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-                            Sua marca merece um site que represente sua visão. Vamos criar algo único para o seu próximo lançamento.
+                            Responda esse formulário para que possamos entender sua visão e criar algo único para o seu próximo lançamento.
                         </p>
                         <!-- FORMULARIO RESPONDI -->
                         <div class="w-full max-w-4xl bg-white rounded-3xl overflow-hidden shadow-2xl border border-white/5 flex flex-col items-center justify-center py-4">
@@ -1264,6 +1590,8 @@
             sr.reveal('.reveal-agency-img', { origin: 'right', delay: 400 });
             sr.reveal('.reveal-process-title', { delay: 200 });
             sr.reveal('.reveal-step', { interval: 200 }); 
+            sr.reveal('.reveal-experts-title', { delay: 200 });
+            sr.reveal('.reveal-expert-card', { interval: 200 });
 
             // 5. NOTEBOOK LOGIC (Intersection Observer - Highly Performant)
             const notebookContainer = document.querySelector('#notebook-container');
